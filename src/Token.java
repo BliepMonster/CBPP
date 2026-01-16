@@ -10,8 +10,13 @@ public class Token {
     public String toString() {
         return "{"+type+", "+text+", "+line+"}";
     }
-    public boolean isMacroEqual(Token t) {
-        return this.text.equals(t.text);
+    public int hashCode() {
+        return this.text.trim().hashCode();
+    }
+    public boolean equals(Object o) {
+        if (o instanceof Token t)
+            return this.text.trim().equals(t.text.trim());
+        return false;
     }
 }
 
@@ -40,6 +45,7 @@ enum TokenType {
     FALSE,
     CHAR,
     STRING,
+    NATIVE_CODE,
 
     IDENTIFIER,
 

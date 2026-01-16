@@ -102,7 +102,6 @@ public class Scanner {
         while (isAlpha(peek()) || isNumeric(peek())) {
             advance();
         }
-        advance();
         tokens.add(makeToken(idenType()));
     }
     public TokenType idenType() {
@@ -134,7 +133,6 @@ public class Scanner {
         while (isNumeric(peek())) {
             advance();
         }
-        advance();
         tokens.add(makeToken(TokenType.NUM));
     }
     public boolean isNumeric(char c) {
@@ -179,7 +177,7 @@ public class Scanner {
                     advance();
                     break;
                 case'@':
-                    while (peek() != '\n') advance();
+                    while (peek() != '\n' && !isAtEnd()) advance();
                     line++;
                     break;
                 default:
