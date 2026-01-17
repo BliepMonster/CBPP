@@ -48,6 +48,8 @@ public class Scanner {
                 consume('\'', "Expected char literal.");
                 tokens.add(makeToken(TokenType.CHAR));
                 break;
+            case ':': tokens.add(makeToken(TokenType.COLON));
+                break;
             case '"':
                 while (peek() != '"' && !isAtEnd()) {
                     char ch = peek();

@@ -40,6 +40,7 @@ public enum TokenType {
     AND,
     XOR,
     QUESTION,
+    COLON,
 
     EQ,
     EQEQ,

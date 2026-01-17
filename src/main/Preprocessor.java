@@ -18,10 +18,6 @@ public class Preprocessor {
         this.tokens = tokens;
     }
     public ArrayList<Token> execute() {
-        /*
-        PLAN: CREATE NEW LIST, FOREACH TOKEN: IF TOKEN == COMMAND, EXECUTE COMMAND
-        ELSE, ADD TO LIST (MACRO)
-         */
         newTokens = new ArrayList<>();
         while (!isAtEnd()) {
             executeOnce();
