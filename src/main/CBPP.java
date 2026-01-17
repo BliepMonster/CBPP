@@ -1,9 +1,11 @@
 package main;
 
 import expressions.Expression;
+import statements.Statement;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CBPP {
     public static void main(String[] args) {
@@ -12,8 +14,8 @@ public class CBPP {
             String src = new String(in.readAllBytes());
             ArrayList<Token> tokens = new Scanner(src).scan();
             tokens = new Preprocessor(tokens).execute();
-            Expression expr = new Parser(tokens).expression();
-            new PrettyPrinter().print(expr);
+            List<Statement> stmts = new Parser(tokens).parse();
+            new PrettyPrinter().print(stmts);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -1,8 +1,12 @@
 package main;
 
 import expressions.*;
+import statements.ExpressionStatement;
+import statements.PrintStatement;
+import statements.Statement;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static main.TokenType.*;
 class ParserException extends RuntimeException {
@@ -17,6 +21,13 @@ public class Parser {
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
         this.index = 0;
+    }
+
+    public List<Statement> parse() {
+        List<Statement> stmts = new ArrayList<>();
+        while (!isAtEnd())
+            stmts.add(statement());
+        return stmts;
     }
     private boolean match(TokenType... types) {
         for (TokenType type : types) {
@@ -159,5 +170,27 @@ public class Parser {
     }
     public String parseStr(String s) {
         return s.substring(1, s.length()-1);
+    }
+
+    public void consumeSemicolon() {
+        consume(SEMICOLON, "Expected semicolon.");
+    }
+
+
+    public Statement statement() {
+        if (match(PRINT))
+            return printStatement();
+        else
+            return expressionStatement();
+    }
+    public Statement printStatement() {
+        Statement value = new PrintStatement(expression());
+        consumeSemicolon();
+        return value;
+    }
+    public Statement expressionStatement() {
+        ExpressionStatement expressionStatement = new ExpressionStatement(expression());
+        consumeSemicolon();
+        return expressionStatement;
     }
 }

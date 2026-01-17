@@ -116,10 +116,7 @@ public class Scanner {
             case "var" -> TokenType.VAR;
             case "while" -> TokenType.WHILE;
             case "mfn" -> TokenType.MFN;
-            case "printc" -> TokenType.PRINTC;
-            case "printb" -> TokenType.PRINTB;
-            case "printv" -> TokenType.PRINTV;
-            case "printstr" -> TokenType.PRINTSTR;
+            case "print" -> TokenType.PRINT;
             case "struct" -> TokenType.STRUCT;
             case "this" -> TokenType.THIS;
             case "if" -> TokenType.IF;

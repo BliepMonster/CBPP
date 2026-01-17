@@ -1,10 +1,29 @@
 package main;
 
 import expressions.*;
-public class PrettyPrinter implements ExpressionVisitor<String> {
-    public void print(Expression e) {
-        System.out.println(e.accept(this));
+import statements.ExpressionStatement;
+import statements.PrintStatement;
+import statements.Statement;
+import statements.StatementVisitor;
+
+import java.util.List;
+
+public class PrettyPrinter implements ExpressionVisitor<String>, StatementVisitor<String> {
+    public void print(List<Statement> stmts) {
+        for (Statement stmt : stmts) {
+            System.out.println(stmt.accept(this));
+        }
     }
+
+    public String visitExpressionStatement(ExpressionStatement stmt) {
+        return "EXPR: "+stmt.expr.accept(this);
+    }
+
+    @Override
+    public String visitPrintStatement(PrintStatement stmt) {
+        return "PRINT: "+stmt.expr.accept(this);
+    }
+
     public String visitBinaryExpression(BinaryExpression expr) {
         String l = expr.left.accept(this);
         String r = expr.right.accept(this);

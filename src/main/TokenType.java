@@ -3,10 +3,7 @@ package main;
 public enum TokenType {
     VAR,
     MFN,
-    PRINTC,
-    PRINTV,
-    PRINTB,
-    PRINTSTR,
+    PRINT,
     STRUCT,
     THIS,
     WHILE,
