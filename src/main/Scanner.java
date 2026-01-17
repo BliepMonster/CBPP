@@ -1,3 +1,5 @@
+package main;
+
 import java.util.ArrayList;
 
 class ScanException extends RuntimeException {
@@ -17,13 +19,13 @@ public class Scanner {
     public ArrayList<Token> scan() {
         while (!isAtEnd()) {
             scanOnce();
-            skipWhitespace();
         }
         tokens.add(new Token("", TokenType.EOF, line));
         return tokens;
     }
     public void scanOnce() {
         skipWhitespace();
+        if (isAtEnd()) return;
         start = pointer;
         char c = advance();
         switch (c) {
@@ -88,7 +90,7 @@ public class Scanner {
                     number();
                     break;
                 }
-                if (isAlpha(c)) {
+                else if (isAlpha(c)) {
                     identifier();
                     break;
                 }
@@ -105,7 +107,7 @@ public class Scanner {
         tokens.add(makeToken(idenType()));
     }
     public TokenType idenType() {
-        String s = code.substring(start, pointer).trim();
+        String s = code.substring(start, pointer);
         return switch(s) {
             case "true" -> TokenType.TRUE;
             case "false" -> TokenType.FALSE;
@@ -173,12 +175,11 @@ public class Scanner {
                     line++;
                     advance();
                     break;
-                case ' ', '\t':
+                case ' ', '\t', '\r':
                     advance();
                     break;
                 case'@':
                     while (peek() != '\n' && !isAtEnd()) advance();
-                    line++;
                     break;
                 default:
                     loop = false;
