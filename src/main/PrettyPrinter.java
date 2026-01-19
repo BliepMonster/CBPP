@@ -63,4 +63,12 @@ public class PrettyPrinter implements ExpressionVisitor<String>, StatementVisito
     public String visitNativeStatement(NativeStatement stmt) {
         return "NATIVE {"+stmt.code+"}";
     }
+    public String visitFunctionStatement(FunctionStatement stmt) {
+        StringBuilder sb = new StringBuilder("FUNCTION ");
+        sb.append(stmt.name).append(" {");
+        for (Statement s : stmt.body) {
+            sb.append(s.accept(this)).append("\n");
+        }
+        return sb.append("}").toString();
+    }
 }

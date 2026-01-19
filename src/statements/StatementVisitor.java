@@ -8,4 +8,5 @@ public interface StatementVisitor<R> {
     R visitIfStatement(IfStatement stmt);
     R visitWhileStatement(WhileStatement stmt);
     R visitNativeStatement(NativeStatement stmt);
+    R visitFunctionStatement(FunctionStatement stmt);
 }

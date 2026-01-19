@@ -204,6 +204,10 @@ public class Parser {
             return ifStatement();
         else if (match(WHILE))
             return whileStatement();
+        else if (match(NATIVE_CODE))
+            return nativeStatement();
+        else if (match(MFN))
+            return functionDeclarationStatement();
         else
             return expressionStatement();
     }
@@ -258,5 +262,31 @@ public class Parser {
     }
     public Statement nativeStatement() {
         return new NativeStatement(previous().text);
+    }
+    public Statement functionDeclarationStatement() {
+        String name = consume(IDENTIFIER, "Expected IDENTIFIER as function name").text;
+        consume(LPAREN, "Expected '('");
+        ArrayList<FunctionArgument> args = new ArrayList<>();
+        if (match(RPAREN))
+            return new FunctionStatement(name, args, functionBody());
+        args.add(functionArgument());
+        while (!match(RPAREN)) {
+            consume(COMMA, "Expected comma");
+            args.add(functionArgument());
+        }
+        return new FunctionStatement(name, args, functionBody());
+    }
+    public FunctionArgument functionArgument() {
+        String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        consume(COLON, "Expected ':'");
+        String type = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        return new FunctionArgument(name, type);
+    }
+    public ArrayList<Statement> functionBody() {
+        consume(LBRACE, "Expected '{'");
+        ArrayList<Statement> stmts = new ArrayList<>();
+        while (!match(RBRACE))
+            stmts.add(statement());
+        return stmts;
     }
 }

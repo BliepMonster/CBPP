@@ -9,5 +9,7 @@ define x "2";
 }
 f(x, 1+2-3);
 
+mfn f(x: int) {print "r";}
+
 if (y) y;
 else x;

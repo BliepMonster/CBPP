@@ -22,7 +22,6 @@ public enum TokenType {
     CHAR,
     STRING,
     NATIVE_CODE,
-    THIS,
 
     IDENTIFIER,
 

@@ -118,7 +118,6 @@ public class Scanner {
             case "mfn" -> TokenType.MFN;
             case "print" -> TokenType.PRINT;
             case "struct" -> TokenType.STRUCT;
-            case "this" -> TokenType.THIS;
             case "if" -> TokenType.IF;
             case "else" -> TokenType.ELSE;
             case "return" -> TokenType.RETURN;
