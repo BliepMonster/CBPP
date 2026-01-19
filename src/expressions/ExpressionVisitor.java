@@ -5,4 +5,5 @@ public interface ExpressionVisitor<R> {
     R visitUnaryExpression(UnaryExpression expr);
     R visitLiteralExpression(LiteralExpression expr);
     R visitIdentifierExpression(IdentifierExpression expr);
+    R visitCallExpression(CallExpression expr);
 }

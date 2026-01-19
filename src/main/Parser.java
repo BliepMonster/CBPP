@@ -1,9 +1,7 @@
 package main;
 
 import expressions.*;
-import statements.ExpressionStatement;
-import statements.PrintStatement;
-import statements.Statement;
+import statements.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,18 +153,36 @@ public class Parser {
         if (match(NUM)) return new LiteralExpression(Integer.parseInt(previous().text));
         if (match(STRING)) return new LiteralExpression(parseStr(previous().text));
         if (match(CHAR)) return new LiteralExpression(previous().text.charAt(1));
-        if (match(IDENTIFIER)) return new IdentifierExpression(previous().text);
         if (match(LPAREN)) {
-            Expression expr = expression();
-            consume(RPAREN, "Expect ')' after grouping expression.");
-            return expr;
+            return grouping();
         }
-        throw new ParserException("Expect expression.", peek().line);
+        return identifier();
     }
-    public void consume(TokenType t, String error) {
+    public Expression grouping() {
+        Expression expr = expression();
+        consume(RPAREN, "Expect ')' after grouping expression.");
+        return expr;
+    }
+    public Expression identifier() {
+        consume(IDENTIFIER, "Expected identifier");
+        String name = previous().text;
+        if (match(LPAREN)) {
+            ArrayList<Expression> args = new ArrayList<>();
+            if (match(RPAREN))
+                return new CallExpression(name, args);
+            args.add(expression());
+            while (!match(RPAREN)) {
+                consume(COMMA, "Expected comma");
+                args.add(expression());
+            }
+            return new CallExpression(name, args);
+        }
+        return new IdentifierExpression(name);
+    }
+    public Token consume(TokenType t, String error) {
         if (!match(t)) {
             throw new ParserException(error, peek().line);
-        }
+        } return previous();
     }
     public String parseStr(String s) {
         return s.substring(1, s.length()-1);
@@ -180,6 +196,14 @@ public class Parser {
     public Statement statement() {
         if (match(PRINT))
             return printStatement();
+        else if (match(VAR))
+            return varStatement();
+        else if (match(LBRACE))
+            return blockStatement();
+        else if (match(IF))
+            return ifStatement();
+        else if (match(WHILE))
+            return whileStatement();
         else
             return expressionStatement();
     }
@@ -192,5 +216,47 @@ public class Parser {
         ExpressionStatement expressionStatement = new ExpressionStatement(expression());
         consumeSemicolon();
         return expressionStatement;
+    }
+    public Statement varStatement() {
+        Expression assigned = identifier();
+        if (!(assigned instanceof IdentifierExpression))
+            throw new ParserException("Invalid assignment target.", previous().line);
+        consume(COLON, "Expected ':'");
+        String typeName = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        consume(EQ, "Expected '='");
+        Expression assignment = expression();
+        consumeSemicolon();
+        return new VarStatement(assigned, assignment, typeName);
+    }
+    public Statement blockStatement() {
+        ArrayList<Statement> statements = new ArrayList<>();
+        while (!match(RBRACE)) {
+            if (isAtEnd())
+                throw new ParserException("Invalid block termination", peek().line);
+            statements.add(statement());
+        }
+        return new BlockStatement(statements);
+    }
+    public Statement ifStatement() {
+        consume(LPAREN, "Expected '('");
+        Expression expr = expression();
+        consume(RPAREN, "Expected ')'");
+        Statement stmt1 = statement();
+        Statement stmt2;
+        if (match(ELSE))
+            stmt2 = statement();
+        else
+            stmt2 = null;
+        return new IfStatement(expr, stmt1, stmt2);
+    }
+    public Statement whileStatement() {
+        consume(LPAREN, "Expected '('");
+        Expression expr = expression();
+        consume(RPAREN, "Expected ')'");
+        Statement stmt = statement();
+        return new WhileStatement(expr, stmt);
+    }
+    public Statement nativeStatement() {
+        return new NativeStatement(previous().text);
     }
 }

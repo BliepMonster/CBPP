@@ -2,14 +2,13 @@ package main;
 
 public enum TokenType {
     VAR,
-    MFN,
     PRINT,
     STRUCT,
-    THIS,
     WHILE,
     IF,
     ELSE,
     RETURN,
+    MFN,
 
     DEFINE,
     NATIVE,
@@ -23,6 +22,7 @@ public enum TokenType {
     CHAR,
     STRING,
     NATIVE_CODE,
+    THIS,
 
     IDENTIFIER,
 

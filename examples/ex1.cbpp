@@ -1,2 +1,13 @@
 define x "2";
-print x+3*3/x**-2**2;
+{
+    print x+3*3/x**-2**2;
+    var y: int = 3;
+    {
+        var f: int = 4;
+    }
+    undef x;
+}
+f(x, 1+2-3);
+
+if (y) y;
+else x;

@@ -1,10 +1,7 @@
 package main;
 
 import expressions.*;
-import statements.ExpressionStatement;
-import statements.PrintStatement;
-import statements.Statement;
-import statements.StatementVisitor;
+import statements.*;
 
 import java.util.List;
 
@@ -37,5 +34,33 @@ public class PrettyPrinter implements ExpressionVisitor<String>, StatementVisito
     }
     public String visitIdentifierExpression(IdentifierExpression expr) {
         return expr.name;
+    }
+
+    @Override
+    public String visitVarStatement(VarStatement stmt) {
+        return "VAR: "+stmt.var.accept(this)+"("+stmt.type+")="+stmt.assignment.accept(this);
+    }
+    public String visitBlockStatement(BlockStatement stmt) {
+        StringBuilder sb = new StringBuilder("BLOCK {\n\t");
+        for (Statement s : stmt.statements) {
+            sb.append("\n\t").append(s.accept(this));
+        }
+        return sb.append("\n}").toString();
+    }
+    public String visitIfStatement(IfStatement stmt) {
+        return "IF ("+stmt.expr.accept(this)+"): "+stmt.thenBranch.accept(this)+(stmt.hasElseStatement() ? ", else: "+stmt.elseBranch.accept(this) : "");
+    }
+    public String visitWhileStatement(WhileStatement stmt) {
+        return "WHILE ("+stmt.expr.accept(this)+"): "+stmt.stmt.accept(this);
+    }
+    public String visitCallExpression(CallExpression expr) {
+        StringBuilder sb = new StringBuilder("CALL "+expr.function+"(");
+        for (Expression expression : expr.args) {
+            sb.append(expression.accept(this)+",");
+        }
+        return sb.append(")").toString();
+    }
+    public String visitNativeStatement(NativeStatement stmt) {
+        return "NATIVE {"+stmt.code+"}";
     }
 }
