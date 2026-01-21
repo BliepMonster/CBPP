@@ -235,9 +235,7 @@ public class Parser {
         return expressionStatement;
     }
     public Statement varStatement() {
-        Expression assigned = identifier();
-        if (!(assigned instanceof IdentifierExpression))
-            throw new ParserException("Invalid assignment target.", previous().line);
+        String assigned = consume(IDENTIFIER, "Expected identifier").text;
         consume(COLON, "Expected ':'");
         String typeName = consume(IDENTIFIER, "Expected IDENTIFIER").text;
         consume(EQ, "Expected '='");

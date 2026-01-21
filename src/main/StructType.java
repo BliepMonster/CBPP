@@ -1,15 +1,13 @@
 package main;
 
-import compilation.verification.Struct;
 
 import java.util.Map;
+import java.util.Objects;
 
 public class StructType extends VariableType {
     public final Map<String, VariableType> fields;
-    public final Struct struct;
 
-    public StructType(Struct struct, Map<String, VariableType> fields) {
-        this.struct = struct;
+    public StructType(Map<String, VariableType> fields) {
         this.fields = fields;
     }
 
@@ -19,5 +17,17 @@ public class StructType extends VariableType {
         for (VariableType type : fields.values())
             s += type.getSize();
         return s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        StructType that = (StructType) o;
+        return Objects.equals(fields, that.fields);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(fields);
     }
 }
