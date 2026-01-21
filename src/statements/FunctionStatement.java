@@ -1,6 +1,6 @@
 package statements;
 
-import main.FunctionArgument;
+import main.VariableSymbol;
 
 import java.util.ArrayList;
 
@@ -9,13 +9,14 @@ public class FunctionStatement extends Statement {
     public <R> R accept(StatementVisitor<R> visitor) {
         return visitor.visitFunctionStatement(this);
     }
-    public final String name;
-    public final ArrayList<FunctionArgument> args;
+    public final String name, returnType;
+    public final ArrayList<VariableSymbol> args;
     public final ArrayList<Statement> body;
 
-    public FunctionStatement(String name, ArrayList<FunctionArgument> args, ArrayList<Statement> body) {
+    public FunctionStatement(String name, ArrayList<VariableSymbol> args, ArrayList<Statement> body, String returnType) {
         this.name = name;
         this.args = args;
         this.body = body;
+        this.returnType = returnType;
     }
 }

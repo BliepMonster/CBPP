@@ -15,7 +15,6 @@ public class CBPP {
             ArrayList<Token> tokens = new Scanner(src).scan();
             tokens = new Preprocessor(tokens).execute();
             List<Statement> stmts = new Parser(tokens).parse();
-            new PrettyPrinter().print(stmts);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

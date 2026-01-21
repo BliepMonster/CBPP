@@ -62,7 +62,7 @@ public class Scanner {
                 break;
             case '+': tokens.add(makeToken(TokenType.PLUS));
                 break;
-            case '-': tokens.add(makeToken(TokenType.MINUS));
+            case '-': tokens.add(makeToken(match('>') ? TokenType.ARROW : TokenType.MINUS));
                 break;
             case '*': tokens.add(makeToken(match('*') ? TokenType.EXPONENT : TokenType.STAR));
                 break;

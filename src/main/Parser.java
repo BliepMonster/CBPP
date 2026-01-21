@@ -166,6 +166,7 @@ public class Parser {
     public Expression identifier() {
         consume(IDENTIFIER, "Expected identifier");
         String name = previous().text;
+        Expression expr;
         if (match(LPAREN)) {
             ArrayList<Expression> args = new ArrayList<>();
             if (match(RPAREN))
@@ -175,9 +176,17 @@ public class Parser {
                 consume(COMMA, "Expected comma");
                 args.add(expression());
             }
-            return new CallExpression(name, args);
-        }
-        return new IdentifierExpression(name);
+            expr = new CallExpression(name, args);
+        } else
+            expr = new IdentifierExpression(name);
+        while (peek().type == DOT)
+            expr = matchDot(expr);
+        return expr;
+    }
+    public Expression matchDot(Expression initial) {
+        if (match(DOT)) {
+            return new DotExpression(initial, consume(IDENTIFIER, "Expected identifier").text);
+        } return initial;
     }
     public Token consume(TokenType t, String error) {
         if (!match(t)) {
@@ -208,6 +217,10 @@ public class Parser {
             return nativeStatement();
         else if (match(MFN))
             return functionDeclarationStatement();
+        else if (match(STRUCT))
+            return structDeclarationStatement();
+        else if (match(RETURN))
+            return returnStatement();
         else
             return expressionStatement();
     }
@@ -266,27 +279,65 @@ public class Parser {
     public Statement functionDeclarationStatement() {
         String name = consume(IDENTIFIER, "Expected IDENTIFIER as function name").text;
         consume(LPAREN, "Expected '('");
-        ArrayList<FunctionArgument> args = new ArrayList<>();
-        if (match(RPAREN))
-            return new FunctionStatement(name, args, functionBody());
+        ArrayList<VariableSymbol> args = new ArrayList<>();
+        if (match(RPAREN)) {
+            String rtype = returnType();
+            return new FunctionStatement(name, args, functionBody(), rtype);
+        }
         args.add(functionArgument());
         while (!match(RPAREN)) {
             consume(COMMA, "Expected comma");
             args.add(functionArgument());
         }
-        return new FunctionStatement(name, args, functionBody());
+        String rtype = returnType();
+        return new FunctionStatement(name, args, functionBody(), rtype);
     }
-    public FunctionArgument functionArgument() {
+    public VariableSymbol functionArgument() {
         String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;
         consume(COLON, "Expected ':'");
         String type = consume(IDENTIFIER, "Expected IDENTIFIER").text;
-        return new FunctionArgument(name, type);
+        return new VariableSymbol(name, type);
     }
     public ArrayList<Statement> functionBody() {
+        if (match(LBRACE)) {
+            ArrayList<Statement> stmts = new ArrayList<>();
+            while (!match(RBRACE))
+                stmts.add(statement());
+            return stmts;
+        } else if (match(COLON)) {
+            ArrayList<Statement> stmts = new ArrayList<>();
+            stmts.add(new ReturnStatement(expression()));
+            consumeSemicolon();
+            return stmts;
+        }
+        throw new ParserException("Expected '{' or ':'", previous().line);
+    }
+    public String returnType() {
+        if (match(ARROW)) {
+            return consume(IDENTIFIER, "Expected RETURN TYPE").text;
+        }
+        return null;
+    }
+    public Statement structDeclarationStatement() {
+        String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;
         consume(LBRACE, "Expected '{'");
-        ArrayList<Statement> stmts = new ArrayList<>();
-        while (!match(RBRACE))
-            stmts.add(statement());
-        return stmts;
+        ArrayList<Variable> fields = new ArrayList<>();
+        // AT LEAST ONE FIELD
+        do {
+            fields.add(structField());
+        } while (!match(RBRACE));
+        return new StructStatement(name, fields);
+    }
+    public Variable structField() {
+        String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        consume(COLON, "Expected ':'");
+        String type = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        consumeSemicolon();
+        return new Variable(name, type);
+    }
+    public Statement returnStatement() {
+        Expression expr = expression();
+        consumeSemicolon();
+        return new ReturnStatement(expr);
     }
 }

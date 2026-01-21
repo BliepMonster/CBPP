@@ -9,4 +9,6 @@ public interface StatementVisitor<R> {
     R visitWhileStatement(WhileStatement stmt);
     R visitNativeStatement(NativeStatement stmt);
     R visitFunctionStatement(FunctionStatement stmt);
+    R visitStructStatement(StructStatement stmt);
+    R visitReturnStatement(ReturnStatement stmt);
 }

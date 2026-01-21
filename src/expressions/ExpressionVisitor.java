@@ -6,4 +6,5 @@ public interface ExpressionVisitor<R> {
     R visitLiteralExpression(LiteralExpression expr);
     R visitIdentifierExpression(IdentifierExpression expr);
     R visitCallExpression(CallExpression expr);
+    R visitDotExpression(DotExpression expr);
 }

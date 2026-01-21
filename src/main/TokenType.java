@@ -27,6 +27,7 @@ public enum TokenType {
 
     PLUS,
     MINUS,
+    ARROW,
     STAR,
     SLASH,
     EXPONENT,

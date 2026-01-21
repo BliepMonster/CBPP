@@ -1,13 +1,15 @@
 package main;
 
+import compilation.verification.Struct;
+
 import java.util.Map;
 
 public class StructType extends VariableType {
-    public final String name;
     public final Map<String, VariableType> fields;
+    public final Struct struct;
 
-    public StructType(String name, Map<String, VariableType> fields) {
-        this.name = name;
+    public StructType(Struct struct, Map<String, VariableType> fields) {
+        this.struct = struct;
         this.fields = fields;
     }
 
