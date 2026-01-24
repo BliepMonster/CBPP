@@ -10,4 +10,9 @@ public class ByteType extends VariableType {
     public boolean equals(Object obj) {
         return obj instanceof ByteType;
     }
+
+    @Override
+    public String toString() {
+        return "byte";
+    }
 }

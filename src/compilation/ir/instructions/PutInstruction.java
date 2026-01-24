@@ -2,9 +2,9 @@ package compilation.ir.instructions;
 
 import compilation.ir.UniqueVariable;
 
-public record CopyInstruction(UniqueVariable var1, UniqueVariable var2) implements Instruction {
+public record PutInstruction(UniqueVariable variable, byte value) implements Instruction {
     @Override
     public <R> R accept(InstructionVisitor<R> visitor) {
-        return visitor.visitCopyInstruction(this);
+        return visitor.visitPutInstruction(this);
     }
 }

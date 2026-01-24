@@ -1,4 +1,4 @@
-package compilation;
+package compilation.ir;
 
 import main.VariableType;
 

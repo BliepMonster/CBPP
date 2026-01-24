@@ -11,4 +11,5 @@ public interface StatementVisitor<R> {
     R visitFunctionStatement(FunctionStatement stmt);
     R visitStructStatement(StructStatement stmt);
     R visitReturnStatement(ReturnStatement stmt);
+    R visitPrintstrStatement(PrintstrStatement stmt);
 }

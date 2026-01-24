@@ -61,7 +61,7 @@ public class Parser {
         if (match(EQ)) {
             Token op = previous();
             Expression right = assignment();
-            if (!(expr instanceof IdentifierExpression))
+            if (!(expr instanceof IdentifierExpression || expr instanceof DotExpression))
                 throw new ParserException("Invalid assignment", op.line);
             expr = new BinaryExpression(expr, op, right);
         }
@@ -151,7 +151,6 @@ public class Parser {
         if (match(TRUE)) return new LiteralExpression(true);
         if (match(FALSE)) return new LiteralExpression(false);
         if (match(NUM)) return new LiteralExpression(Integer.parseInt(previous().text));
-        if (match(STRING)) return new LiteralExpression(parseStr(previous().text));
         if (match(CHAR)) return new LiteralExpression(previous().text.charAt(1));
         if (match(LPAREN)) {
             return grouping();
@@ -193,9 +192,6 @@ public class Parser {
             throw new ParserException(error, peek().line);
         } return previous();
     }
-    public String parseStr(String s) {
-        return s.substring(1, s.length()-1);
-    }
 
     public void consumeSemicolon() {
         consume(SEMICOLON, "Expected semicolon.");
@@ -225,6 +221,11 @@ public class Parser {
             return expressionStatement();
     }
     public Statement printStatement() {
+        if (match(STRING)) {
+            String s = previous().text;
+            consumeSemicolon();
+            return new PrintstrStatement(s.substring(1, s.length() - 1));
+        }
         Statement value = new PrintStatement(expression());
         consumeSemicolon();
         return value;
@@ -311,10 +312,8 @@ public class Parser {
         throw new ParserException("Expected '{' or ':'", previous().line);
     }
     public String returnType() {
-        if (match(ARROW)) {
-            return consume(IDENTIFIER, "Expected RETURN TYPE").text;
-        }
-        return null;
+        consume(ARROW, "Expected RETURN TYPE");
+        return consume(IDENTIFIER, "Expected RETURN TYPE").text;
     }
     public Statement structDeclarationStatement() {
         String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;

@@ -1,15 +1,39 @@
-define x "2";
-{
-    print x+3*3/x**-2**2;
-    var y: int = 3;
-    {
-        var f: int = 4;
-    }
-    undef x;
+struct Vector2b {
+    x: byte;
+    y: byte;
 }
-f(x, 1+2-3);
+struct Rect {
+    position: Vector2b;
+    dimensions: Vector2b;
+}
+struct NoReturn {
+    dummy: bool;
+}
+var NO_RETURN: NoReturn = _NoReturn();
 
-mfn f(x: int) {print "r";}
-
-if (y) y;
-else x;
+mfn printb(b: bool) -> NoReturn {
+    if (b)
+        print "true";
+    else
+        print "false";
+    return NO_RETURN;
+}
+mfn new_Vector2b(x: byte, y: byte) -> Vector2b {
+    var vec: Vector2b = _Vector2b();
+    vec.x = x;
+    vec.y = y;
+    return vec;
+}
+mfn new_Rect(position: Vector2b, dimensions: Vector2b) -> Rect {
+    var rect: Rect = _Rect();
+    rect.position = position;
+    rect.dimensions = dimensions;
+    return rect;
+}
+mfn collides(r1: Rect, r2: Rect) -> bool: (r1.position.x+r1.dimensions.x > r2.position.x)
+                                        & (r2.position.x+r2.dimensions.x > r1.position.x)
+                                        & (r1.position.y+r1.dimensions.y > r2.position.y)
+                                        & (r2.position.y+r2.dimensions.y > r1.position.y);
+var r1: Rect = new_Rect(new_Vector2b(0, 1), new_Vector2b(2, 1));
+var r2: Rect = new_Rect(new_Vector2b(1, 1), new_Vector2b(1, 1));
+printb(collides(r1, r2));

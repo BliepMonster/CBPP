@@ -1,21 +1,29 @@
 package main;
 
 
-import java.util.Map;
+import compilation.ir.StructField;
+
+import java.util.ArrayList;
 import java.util.Objects;
 
-public class StructType extends VariableType {
-    public final Map<String, VariableType> fields;
+class StructLookupException extends RuntimeException {
+    public StructLookupException(String s) {
+        super(s);
+    }
+}
 
-    public StructType(Map<String, VariableType> fields) {
+public class StructType extends VariableType {
+    public final ArrayList<StructField> fields;
+
+    public StructType(ArrayList<StructField> fields) {
         this.fields = fields;
     }
 
     @Override
     public int getSize() {
         int s = 0;
-        for (VariableType type : fields.values())
-            s += type.getSize();
+        for (StructField field : fields)
+            s += field.type().getSize();
         return s;
     }
 
@@ -29,5 +37,22 @@ public class StructType extends VariableType {
     @Override
     public int hashCode() {
         return Objects.hashCode(fields);
+    }
+    public String toString() {
+        StringBuilder sb = new StringBuilder("STRUCT_[");
+        for (StructField f : fields) {
+            sb.append(f.type()).append(",");
+        }
+        return sb.append("]").toString();
+    }
+    public int getFieldOffset(String s) {
+        for (int i = 0; i < fields.size(); i++) {
+            if (s.equals(fields.get(i).name()))
+                return i;
+        }
+        throw new StructLookupException("Invalid field");
+    }
+    public VariableType getType(int offset) {
+        return fields.get(offset).type();
     }
 }
