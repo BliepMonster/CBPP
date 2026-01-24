@@ -6,6 +6,7 @@ import compilation.ir.instructions.cf.IfInstruction;
 import compilation.ir.instructions.cf.WhileInstruction;
 import compilation.ir.instructions.math.*;
 import compilation.ir.instructions.math.num.*;
+import compilation.ir.instructions.mem.ClearInstruction;
 import compilation.ir.instructions.mem.CopyInstruction;
 import expressions.*;
 import main.*;
@@ -147,6 +148,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         scope.register(fn);
         functionScope(fn);
         ArrayList<Instruction> body = new ArrayList<>();
+        body.add(new ClearInstruction(scope.retrieveVar(rname)));
         for (Statement fnstmt : stmt.body) {
             body.addAll(fnstmt.accept(this));
         }
@@ -393,6 +395,8 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         if (!(vtype instanceof StructType type))
             throw new CompilerException("Invalid member expression");
         int i = type.getFieldOffset(expr.right);
+        if (uv instanceof MemberVariable mem)
+            return new ExpressionResult(new ArrayList<>(), new MemberVariable(mem.name, mem.identifier, type.getType(i), i+mem.offset));
         return new ExpressionResult(new ArrayList<>(), new MemberVariable(uv.name, uv.identifier, type.getType(i), i));
     }
 }
