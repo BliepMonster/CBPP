@@ -1,6 +1,7 @@
 package compilation.ir;
 
 import compilation.ir.instructions.*;
+import compilation.ir.instructions.cf.CallInstruction;
 import compilation.ir.instructions.cf.FunctionDefinitionInstruction;
 import compilation.ir.instructions.cf.IfInstruction;
 import compilation.ir.instructions.cf.WhileInstruction;
@@ -13,6 +14,7 @@ import main.*;
 import statements.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 class CompilerException extends RuntimeException {
@@ -163,13 +165,20 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         }
         return sb.toString();
     }
+    public int fieldListSize(HashMap<StructField, Integer> fields) {
+        int s = 0;
+        for (StructField field : fields.keySet()) {
+            s += field.type().getSize();
+        }
+        return s;
+    }
     public ArrayList<Instruction> visitStructStatement(StructStatement stmt) {
-        ArrayList<StructField> fields = new ArrayList<>();
+        HashMap<StructField, Integer> fields = new HashMap<>();
         for (Variable v : stmt.variables) {
-            for (StructField field : fields)
+            for (StructField field : fields.keySet())
                 if (field.name().equals(v.name()))
                     throw new CompilerException("Duplicate fields");
-            fields.add(new StructField(v.name(), getType(v.type())));
+            fields.put(new StructField(v.name(), getType(v.type())), fieldListSize(fields));
         }
         StructType type = new StructType(fields);
         scope.register(new CompiledStruct(stmt.name, type));

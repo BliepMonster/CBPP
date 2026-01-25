@@ -111,4 +111,12 @@ public class PrettyPrinter implements InstructionVisitor<String> {
     public String visitCallInstruction(CallInstruction instr) {
         return "call "+instr.fname()+";";
     }
+    public String visitSimpleIfInstruction(SimpleIfInstruction instr) {
+        StringBuilder sb = new StringBuilder("simple if "+instr.condition().getUniqueName()+" {");
+        for (Instruction i : instr.instructions()) {
+            sb.append("\n\t")
+                    .append(i.accept(this));
+        }
+        return sb.append("\n}").toString();
+    }
 }

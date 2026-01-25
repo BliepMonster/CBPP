@@ -1,4 +1,7 @@
-package compilation.ir.instructions;
+package compilation.ir.instructions.cf;
+
+import compilation.ir.instructions.Instruction;
+import compilation.ir.instructions.InstructionVisitor;
 
 public record CallInstruction(String fname) implements Instruction {
     @Override

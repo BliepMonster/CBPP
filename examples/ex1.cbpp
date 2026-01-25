@@ -4,6 +4,8 @@ struct S1 {
 }
 struct S2 {
     b: S1;
+    q: byte;
 }
 var s: S2 = _S2();
 print s.b.q;
+print s.q;
