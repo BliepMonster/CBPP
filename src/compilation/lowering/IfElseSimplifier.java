@@ -18,6 +18,13 @@ class IfElseSimplifierException extends RuntimeException {
 }
 
 public class IfElseSimplifier implements InstructionVisitor<ArrayList<Instruction>> {
+    public ArrayList<Instruction> simplify(ArrayList<Instruction> code) {
+        ArrayList<Instruction> out = new ArrayList<>();
+        for (Instruction i : code) {
+            out.addAll(i.accept(this));
+        }
+        return out;
+    }
     public static int counter = 0;
     public ArrayList<Instruction> visitAllocateInstruction(AllocateInstruction instr) {
         return new ArrayList<>(Collections.singleton(instr));

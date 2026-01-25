@@ -19,6 +19,13 @@ class IfWhileSimplifierException extends RuntimeException {
 
 public class IfWhileSimplifier implements InstructionVisitor<ArrayList<Instruction>> {
     int counter = 0;
+    public ArrayList<Instruction> simplify(ArrayList<Instruction> code) {
+        ArrayList<Instruction> out = new ArrayList<>();
+        for (Instruction i : code) {
+            out.addAll(i.accept(this));
+        }
+        return out;
+    }
     @Override
     public ArrayList<Instruction> visitXorInstruction(XorInstruction instr) {
         return new ArrayList<>(Collections.singleton(instr));

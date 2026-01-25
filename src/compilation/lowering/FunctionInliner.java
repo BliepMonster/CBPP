@@ -18,6 +18,13 @@ class FunctionInlinerException extends RuntimeException {
 
 public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction>> {
     HashMap<String, ArrayList<Instruction>> macros = new HashMap<>();
+    public ArrayList<Instruction> inline(ArrayList<Instruction> code) {
+        ArrayList<Instruction> out = new ArrayList<>();
+        for (Instruction i : code) {
+            out.addAll(i.accept(this));
+        }
+        return out;
+    }
     @Override
     public ArrayList<Instruction> visitPrintstrInstruction(PrintstrInstruction instr) {
         return new ArrayList<>(Collections.singleton(instr));
@@ -129,7 +136,10 @@ public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction
 
     @Override
     public ArrayList<Instruction> visitFunctionDefinitionInstruction(FunctionDefinitionInstruction instr) {
-        macros.put(instr.name(), instr.instructions());
+        ArrayList<Instruction> body = new ArrayList<>();
+        for (Instruction i : instr.instructions())
+            body.addAll(i.accept(this));
+        macros.put(instr.name(), body);
         return new ArrayList<>();
     }
 

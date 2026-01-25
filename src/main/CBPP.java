@@ -3,6 +3,7 @@ package main;
 import compilation.PrettyPrinter;
 import compilation.ir.Compiler;
 import compilation.ir.instructions.Instruction;
+import compilation.lowering.Lowerer;
 import statements.Statement;
 
 import java.io.FileInputStream;
@@ -18,7 +19,8 @@ public class CBPP {
         ArrayList<Token> tokens = new Scanner(src).scan();
         tokens = new Preprocessor(tokens).execute();
         List<Statement> stmts = new Parser(tokens).parse();
-        List<Instruction> instructions = new Compiler().compile(stmts);
+        ArrayList<Instruction> instructions = new Compiler().compile(stmts);
+        instructions = Lowerer.lower(instructions);
         new PrettyPrinter().print(instructions);
     }
 }

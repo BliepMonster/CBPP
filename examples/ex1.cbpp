@@ -6,6 +6,12 @@ struct S2 {
     b: S1;
     q: byte;
 }
-var s: S2 = _S2();
+mfn S2(b: S1, q: byte) -> S2 {
+    var s: S2 = _S2();
+    s.b = b;
+    s.q = q;
+}
+var s: S2 = S2(_S1(), 2);
+var t: S2 = S2(_S1(), 2);
 print s.b.q;
 print s.q;
