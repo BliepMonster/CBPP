@@ -92,8 +92,8 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         ExpressionResult condition2 = stmt.expr.accept(this);
         body.addAll(condition2.instructions());
         body.add(new CopyInstruction(condition2.result(), loopVariable));
+        body.addAll(freeScope());
         output.add(new WhileInstruction(body, loopVariable));
-        output.addAll(freeScope());
         return output;
     }
     public ArrayList<Instruction> visitIfStatement(IfStatement stmt) {
@@ -243,7 +243,12 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             case SLASH -> out.add(new DivInstruction(res1.result(), res2.result(), result));
             case MOD -> out.add(new ModInstruction(res1.result(), res2.result(), result));
             case EXPONENT -> out.add(new ExpInstruction(res1.result(), res2.result(), result));
-            case EQEQ -> out.add(new EqInstruction(res1.result(), res2.result(), result));
+            case EQEQ -> {
+                if (!res1.result().type.equals(res2.result().type))
+                    out.add(new PutInstruction(result, (byte) 0));
+                else
+                    out.add(new EqInstruction(res1.result(), res2.result(), result));
+            }
             case NEQ -> {
                 out.add(new EqInstruction(res1.result(), res2.result(), result));
                 out.add(new InvInstruction(result, result));
@@ -407,5 +412,13 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         if (uv instanceof MemberVariable mem)
             return new ExpressionResult(new ArrayList<>(), new MemberVariable(mem.name, mem.identifier, type.getType(i), i+mem.offset));
         return new ExpressionResult(new ArrayList<>(), new MemberVariable(uv.name, uv.identifier, type.getType(i), i));
+    }
+    public ExpressionResult visitInputExpression(InputExpression expr) {
+        ArrayList<Instruction> out = new ArrayList<>();
+        TempAllocationResult temp = scope.allocTemp(ByteType.INSTANCE);
+        out.add(temp.instr());
+        UniqueVariable uv = scope.retrieveVar(temp.tempName());
+        out.add(new InputInstruction(uv));
+        return new ExpressionResult(out, uv);
     }
 }

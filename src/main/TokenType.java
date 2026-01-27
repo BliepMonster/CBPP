@@ -9,6 +9,7 @@ public enum TokenType {
     ELSE,
     RETURN,
     MFN,
+    $INPUT,
 
     DEFINE,
     NATIVE,

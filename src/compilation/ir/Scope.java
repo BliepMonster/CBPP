@@ -29,13 +29,14 @@ public class Scope {
     public Instruction register(CompiledVariable variable) {
         UniqueVariable v = new UniqueVariable(variable.name(), lastAllocatedID++, variable.type());
         variables.put(variable.name(), v);
-        return new AllocateInstruction(v.getUniqueName(), v.type.getSize());
+        return new AllocateInstruction(v, v.type.getSize());
     }
     public TempAllocationResult allocTemp(VariableType type) {
         int i = lastTempID++;
         String name = "@temp_"+i;
-        Instruction instr = new AllocateInstruction(name, type.getSize());
-        variables.put(name, new UniqueVariable(name, i, type));
+        UniqueVariable uv = new UniqueVariable("@temp", i, type);
+        Instruction instr = new AllocateInstruction(uv, type.getSize());
+        variables.put(name, uv);
         return new TempAllocationResult(name, instr);
     }
     public ArrayList<Instruction> freeAll() {

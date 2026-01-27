@@ -100,7 +100,7 @@ public class Scanner {
         }
     }
     public boolean isAlpha(char c) {
-        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+        return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_' || c == '$';
     }
     public void identifier() {
         while (isAlpha(peek()) || isNumeric(peek())) {
@@ -126,6 +126,7 @@ public class Scanner {
             case "ifdef" -> TokenType.IFDEF;
             case "ifndef" -> TokenType.IFNDEF;
             case "native" -> TokenType.NATIVE;
+            case "$input" -> TokenType.$INPUT;
             default -> TokenType.IDENTIFIER;
         };
     }

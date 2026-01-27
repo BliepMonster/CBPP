@@ -33,4 +33,5 @@ public interface InstructionVisitor<R> {
     R visitPutInstruction(PutInstruction instr);
     R visitCallInstruction(CallInstruction instr);
     R visitSimpleIfInstruction(SimpleIfInstruction instr);
+    R visitInputInstruction(InputInstruction instr);
 }

@@ -14,4 +14,7 @@ public class MemberVariable extends UniqueVariable {
     public String getUniqueName() {
         return super.getUniqueName()+"["+offset+"]";
     }
+    public String getOwnerName() {
+        return super.getUniqueName();
+    }
 }

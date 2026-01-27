@@ -163,9 +163,14 @@ public class Parser {
         return expr;
     }
     public Expression identifier() {
+        Expression expr;
+        if (match($INPUT)) {
+            consume(LPAREN, "Expected '('");
+            consume(RPAREN, "Expected ')'");
+            return new InputExpression();
+        }
         consume(IDENTIFIER, "Expected identifier");
         String name = previous().text;
-        Expression expr;
         if (match(LPAREN)) {
             ArrayList<Expression> args = new ArrayList<>();
             if (match(RPAREN))

@@ -70,8 +70,8 @@ public class IfWhileSimplifier implements InstructionVisitor<ArrayList<Instructi
         int c = counter++;
         String fullName = baseName+"_"+c;
         UniqueVariable uv = new UniqueVariable(baseName, c, BoolType.INSTANCE);
-        out.add(new AllocateInstruction(fullName, 1));
-        out.add(new PutInstruction(uv, (byte) 1));
+        out.add(new AllocateInstruction(uv, 1));
+        out.add(new CopyInstruction(instr.condition(), uv));
         ArrayList<Instruction> body = new ArrayList<>();
         for (Instruction i : instr.instructions())
             body.addAll(i.accept(this));
@@ -178,6 +178,11 @@ public class IfWhileSimplifier implements InstructionVisitor<ArrayList<Instructi
 
     @Override
     public ArrayList<Instruction> visitCallInstruction(CallInstruction instr) {
+        return new ArrayList<>(Collections.singleton(instr));
+    }
+
+    @Override
+    public ArrayList<Instruction> visitInputInstruction(InputInstruction instr) {
         return new ArrayList<>(Collections.singleton(instr));
     }
 }

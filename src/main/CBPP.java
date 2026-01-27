@@ -1,13 +1,16 @@
 package main;
 
-import compilation.PrettyPrinter;
+import compilation.bf.BfCompiler;
+import compilation.bpp.IrCompiler;
 import compilation.ir.Compiler;
 import compilation.ir.instructions.Instruction;
 import compilation.lowering.Lowerer;
 import statements.Statement;
 
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,10 @@ public class CBPP {
         List<Statement> stmts = new Parser(tokens).parse();
         ArrayList<Instruction> instructions = new Compiler().compile(stmts);
         instructions = Lowerer.lower(instructions);
-        new PrettyPrinter().print(instructions);
+        String output = args[1];
+        FileOutputStream out = new FileOutputStream(output);
+        PrintStream stream = new PrintStream(out);
+        stream.print(new BfCompiler().compile(new IrCompiler().compile(instructions)));
+        stream.close();
     }
 }

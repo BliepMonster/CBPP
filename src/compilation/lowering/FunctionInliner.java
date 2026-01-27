@@ -167,4 +167,9 @@ public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction
     public ArrayList<Instruction> visitPutInstruction(PutInstruction instr) {
         return new ArrayList<>(Collections.singleton(instr));
     }
+
+    @Override
+    public ArrayList<Instruction> visitInputInstruction(InputInstruction instr) {
+        return new ArrayList<>(Collections.singleton(instr));
+    }
 }

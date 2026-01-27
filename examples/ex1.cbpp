@@ -1,17 +1,96 @@
-struct S1 {
-    b: byte;
-    q: byte;
+struct NoReturn {
+    dummy: byte;
 }
-struct S2 {
-    b: S1;
-    q: byte;
+
+define NO_ERROR "0";
+define ERROR_INVALID_ARGUMENT "1";
+define RUNTIME_ERROR "2";
+define ERROR_INVALID_STATE "3";
+define ERROR_INVALID_USER_INPUT "4";
+
+struct PossibleError {
+    type: byte;
 }
-mfn S2(b: S1, q: byte) -> S2 {
-    var s: S2 = _S2();
-    s.b = b;
-    s.q = q;
+
+mfn error(type: byte) -> PossibleError {
+    var e: PossibleError = _PossibleError();
+    e.type = type;
+    return e;
 }
-var s: S2 = S2(_S1(), 2);
-var t: S2 = S2(_S1(), 2);
-print s.b.q;
-print s.q;
+mfn printc(x: byte) -> PossibleError {
+    if (x >= 10)
+        return error(ERROR_INVALID_ARGUMENT);
+    else
+        print x+'0';
+}
+
+mfn printv(x: byte) -> PossibleError {
+    if (x >= 100) {
+        var h: byte = x/100;
+        var err: PossibleError = printc(h);
+        if (?err.type)
+            return err;
+        else {
+            var n: byte = x%100;
+            h = n/10;
+            err = printc(h);
+            if (?err.type)
+                return err;
+            else {
+                return printc(n%10);
+            }
+        }
+    } else if (x >= 10) {
+         var h: byte = x/10;
+         var err: PossibleError = printc(h);
+         if (?err.type)
+             return err;
+         else {
+             return printc(x%10);
+         }
+    } else {
+         return printc(x);
+    }
+}
+mfn printv(x: bool) -> NoReturn {
+    if (x)
+        print "true";
+    else
+        print "false";
+}
+
+struct ByteError {
+    result: byte;
+    error: bool;
+}
+
+mfn _ByteError(result: byte, error: bool) -> ByteError {
+    var err: ByteError = _ByteError();
+    err.result = result;
+    err.error = error;
+    return err;
+}
+
+mfn input_num_3() -> ByteError {
+    mfn is_num(x: byte) -> bool: x >= '0' & x <= '9';
+
+    mfn num(x: byte) -> byte: x-'0';
+
+    mfn input_numc() -> ByteError {
+        var i: byte = $input();
+        if (!is_num(i))
+            return _ByteError(ERROR_INVALID_USER_INPUT, true);
+        else return _ByteError(num(i), false);
+    }
+
+    var i: byte = 0;
+    var in: ByteError = input_numc();
+    if (in.error) {
+        return in.error;
+    } else {
+        var counter: byte = 0;
+        return i;
+    }
+}
+printv(33);
+print 10;
