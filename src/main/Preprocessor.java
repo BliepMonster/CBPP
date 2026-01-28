@@ -101,9 +101,9 @@ public class Preprocessor {
                             depth--;
                     if (contains)
                         executeOnce();
+                    else advance();
                     if (isAtEnd())
                         throw new PreprocessorException("Unterminated IFDEF block");
-                    else advance();
                 }
                 break;
             }
@@ -123,9 +123,9 @@ public class Preprocessor {
                             depth--;
                     if (contains)
                         executeOnce();
+                    else advance();
                     if (isAtEnd())
                         throw new PreprocessorException("Unterminated IFNDEF block");
-                    else advance();
                 }
                 break;
             }
