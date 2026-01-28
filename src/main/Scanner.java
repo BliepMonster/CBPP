@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 
+import static main.TokenType.*;
+
 class ScanException extends RuntimeException {
     public ScanException(String s, int line) {
         super("Error at line "+line+": "+s);
@@ -60,15 +62,15 @@ public class Scanner {
                 advance();
                 tokens.add(makeToken(TokenType.STRING));
                 break;
-            case '+': tokens.add(makeToken(TokenType.PLUS));
+            case '+': tokens.add(makeToken(match('=') ? PLUS_EQ : TokenType.PLUS));
                 break;
-            case '-': tokens.add(makeToken(match('>') ? TokenType.ARROW : TokenType.MINUS));
+            case '-': tokens.add(makeToken(match('>') ? TokenType.ARROW : match('=') ? MINUS_EQ : TokenType.MINUS));
                 break;
-            case '*': tokens.add(makeToken(match('*') ? TokenType.EXPONENT : TokenType.STAR));
+            case '*': tokens.add(makeToken(match('*') ? match('=') ? EXP_EQ : TokenType.EXPONENT : match('=') ? STAR_EQ : TokenType.STAR));
                 break;
-            case '/': tokens.add(makeToken(TokenType.SLASH));
+            case '/': tokens.add(makeToken(match('=') ? SLASH_EQ : TokenType.SLASH));
                 break;
-            case '%': tokens.add(makeToken(TokenType.MOD));
+            case '%': tokens.add(makeToken(match('=') ? MOD_EQ : TokenType.MOD));
                 break;
             case '!': tokens.add(makeToken(match('=') ? TokenType.NEQ : TokenType.BANG));
                 break;
@@ -80,11 +82,11 @@ public class Scanner {
                 break;
             case '=': tokens.add(makeToken(match('=') ? TokenType.EQEQ : TokenType.EQ));
                 break;
-            case '|': tokens.add(makeToken(TokenType.OR));
+            case '|': tokens.add(makeToken(match('=') ? OR_EQ : TokenType.OR));
                 break;
-            case '^': tokens.add(makeToken(TokenType.XOR));
+            case '^': tokens.add(makeToken(match('=') ? XOR_EQ : TokenType.XOR));
                 break;
-            case '&': tokens.add(makeToken(TokenType.AND));
+            case '&': tokens.add(makeToken(match('=') ? AND_EQ : TokenType.AND));
                 break;
             case '\0': break;
             default:

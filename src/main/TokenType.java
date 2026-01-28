@@ -49,6 +49,16 @@ public enum TokenType {
     LT,
     LTEQ,
 
+    PLUS_EQ,
+    MINUS_EQ,
+    STAR_EQ,
+    SLASH_EQ,
+    EXP_EQ,
+    MOD_EQ,
+    AND_EQ,
+    OR_EQ,
+    XOR_EQ,
+
     SEMICOLON,
     COMMA,
     LBRACE,
