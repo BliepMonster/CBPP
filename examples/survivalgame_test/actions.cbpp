@@ -1,0 +1,34 @@
+mfn print_action_list(state: GameState) -> NoReturn {
+    define player "state.player";
+    print "You can perform the following actions: ";
+    if (player.hunger >= 30)
+        print "Hunt<000>, ";
+    if (player.thirst >= 10)
+        print "Cut wood<001>, ";
+    print 10;
+    undef player;
+}
+
+mfn hunt(state: GameState) -> GameState {
+    state.player.hunger = safe_sub(state.player.hunger, 10);
+    @RNG
+}
+
+mfn perform(id: byte, state: GameState) -> GameState {
+    if (id == 000)
+        return hunt(state);
+    else if (id == 001)
+        return cut_wood(state);
+    else {
+        print "Invalid action id";
+        error();
+    }
+}
+mfn perform_actions(state: GameState) -> GameState {
+    var action: ByteError = input_num_3();
+    if (action.error) {
+        print "Invalid action";
+        error();
+    } var id: byte = action.result;
+    perform(id);
+}

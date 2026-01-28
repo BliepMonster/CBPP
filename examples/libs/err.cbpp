@@ -1,0 +1,24 @@
+@Library tag
+define LIB_BASIC_ERRORS_BLEP "";
+
+@Workaround for the "everything must return"-rule
+struct NoReturn {
+    dummy: byte;
+}
+
+define NO_ERROR "0";
+define ERROR_INVALID_ARGUMENT "1";
+define RUNTIME_ERROR "2";
+define ERROR_INVALID_STATE "3";
+define ERROR_INVALID_USER_INPUT "4";
+
+struct PossibleError {
+    type: byte;
+}
+
+mfn panic() -> NoReturn {
+    @move ptr to r0
+    native "inc r0, 1;";
+    @skip past bpp temps to -1, crashing the program
+    native native "<<<<<<<<<";
+}

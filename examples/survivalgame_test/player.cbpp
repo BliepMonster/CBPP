@@ -1,0 +1,28 @@
+import "examples/libs/num.cbpp";
+
+
+mfn _Player() -> Player {
+    var player: Player = _Player();
+    player.hunger = player.health = player.thirst = 100;
+    return player;
+}
+
+mfn update_stats(state: GameState) -> GameState {
+    if (!?state.player.hunger)
+        state.player.health = safe_sub(state.player.health, 5);
+    if (!?state.player.thirst)
+        state.player.health = safe_sub(state.player.health, 10);
+    return state;
+}
+
+mfn printv(player: Player) -> NoReturn {
+    print "Hunger: ";
+    printv(player.hunger);
+    print 10;
+    print "Health: ";
+    printv(player.health);
+    print 10;
+    print "Thirst: ";
+    printv(player.thirst);
+    print 10;
+}

@@ -33,7 +33,7 @@ public class Compiler {
         this.tokens = tokens;
         StringBuilder builder = new StringBuilder();
         while (!isAtEnd()) {
-            builder.append(compileStatement());
+            builder.append(compileStatement()).append("\n");
         }
         return builder.toString();
     }
@@ -205,6 +205,8 @@ public class Compiler {
                 int rid1 = rvalue(advance().token);
                 consumeComma();
                 int rid2 = rvalue(advance().token);
+                if (rid1 == rid2)
+                    break;
                 sb.append(move(rid2)).append("[-]");
                 // move rid1 to tr2
                 sb.append(moveValue(rid1, TEMP_REG2));
@@ -222,6 +224,8 @@ public class Compiler {
                 int rid1 = rvalue(advance().token);
                 consumeComma();
                 int rid2 = rvalue(advance().token);
+                if (rid1 == rid2)
+                    break;
                 sb.append(moveValue(rid1, TEMP_REG2));
                 sb.append(moveValue(rid2, rid1));
                 sb.append(moveValue(TEMP_REG2, rid2));
@@ -305,7 +309,7 @@ public class Compiler {
                 sb.append("[-");
                 sb.append(move(TEMP_REG3));
                 sb.append("+");
-                sb.append(move(rid1));
+                sb.append(move(rid2));
                 sb.append("+");
                 sb.append(move(TEMP_REG2));
                 sb.append("]");
@@ -322,6 +326,7 @@ public class Compiler {
 
                 // Decrement TEMP_REG1
                 sb.append(move(TEMP_REG1)).append("-]");
+                sb.append(move(TEMP_REG2)).append("[-]");
                 break;
             }
             case EQ: {
@@ -612,6 +617,8 @@ public class Compiler {
                 int r1 = rvalue(advance().token);
                 consumeComma();
                 int r2 = rvalue(advance().token);
+                if (r1 == r2)
+                    break;
                 sb.append(move(r1))
                         .append("[-")
                         .append(move(r2))

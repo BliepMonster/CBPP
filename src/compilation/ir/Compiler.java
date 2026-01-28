@@ -229,7 +229,6 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         if (expr.operator.type == TokenType.EQ) {
             if (!(expr.left instanceof IdentifierExpression || expr.left instanceof DotExpression))
                 throw new CompilerException("Invalid assignment target");
-            out.addAll(res2.instructions());
             out.add(new CopyInstruction(res2.result(), res1.result()));
             return new ExpressionResult(out, res1.result());
         }
@@ -342,7 +341,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     public ExpressionResult visitLiteralExpression(LiteralExpression expr) {
         Object obj = expr.value;
         ArrayList<Instruction> out = new ArrayList<>();
-        byte b = getValue(obj);
+        int b = getValue(obj);
         TempAllocationResult tmp = scope.allocTemp(getType(obj));
         String tname = tmp.tempName();
         out.add(tmp.instr());
@@ -350,19 +349,19 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         out.add(new PutInstruction(uv, b));
         return new ExpressionResult(out, uv);
     }
-    public byte getValue(Object o) {
+    public int getValue(Object o) {
         if (o instanceof Boolean b)
-            return b ? (byte) 1 : 0;
+            return b ? 1 : 0;
         else if (o instanceof Integer i)
             if (i >= 256)
                 throw new CompilerException("Invalid byte size");
             else
-                return (byte) (int) i;
+                return i;
         else if (o instanceof Character c) {
             int i = (int) c;
             if (i >= 256)
                 throw new CompilerException("Invalid character");
-            return (byte) i;
+            return i;
         }
         throw new CompilerException("Invalid variable state");
     }

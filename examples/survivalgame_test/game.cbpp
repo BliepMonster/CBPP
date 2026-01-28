@@ -1,0 +1,38 @@
+import "examples/libs/err.cbpp";
+import "examples/libs/io.cbpp";
+import "examples/libs/rng.cbpp";
+struct Player {
+    health: byte;
+    hunger: byte;
+    thirst: byte;
+}
+struct GameState {
+    player: Player;
+    game_running: bool;
+    rand: RandomData;
+}
+import "examples/survivalgame_test/player.cbpp";
+import "examples/survivalgame_test/actions.cbpp";
+
+mfn _GameState() -> GameState {
+    var state: GameState = _GameState();
+    state.player = _Player();
+    state.game_running = true;
+    print "Insert random seed here: ";
+    rand = _RandomData(input_num_3());
+    return state;
+}
+
+var state: GameState = _GameState();
+
+print "You are stranded on a deserted island...";
+print 10;
+
+while (state.game_running) {
+    printv(state.player);
+    state = update_stats(state);
+    print_action_list(state);
+    if (!?state.player.health)
+        state.game_running = false;
+}
+print "Game over.";

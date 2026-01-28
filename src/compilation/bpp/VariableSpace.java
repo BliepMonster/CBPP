@@ -8,15 +8,18 @@ public class VariableSpace {
         if (!isStruct)
             return allocSingle(name);
         ArrayList<SimpleRegister> parts = new ArrayList<>();
+        HashSet<Integer> set = new HashSet<>();
         for (int i = 0; i < size; i++) {
-            parts.add(new SimpleRegister(findNextEmpty()));
+            int q = findNextEmpty(set);
+            set.add(q);
+            parts.add(new SimpleRegister(q));
         }
         Register r = new StructRegister(parts);
         regs.put(name, r);
         return r;
     }
     private SimpleRegister allocSingle(String name) {
-        int reg = findNextEmpty();
+        int reg = findNextEmpty(new HashSet<>());
         SimpleRegister r = new SimpleRegister(reg);
         regs.put(name, r);
         return r;
@@ -24,8 +27,8 @@ public class VariableSpace {
     public void remove(String name) {
         regs.remove(name);
     }
-    private int findNextEmpty() {
-        Set<Integer> allocated = new HashSet<>();
+    private int findNextEmpty(Set<Integer> all) {
+        Set<Integer> allocated = new HashSet<>(all);
         for (Register r : regs.values()) {
             switch (r) {
                 case SimpleRegister si -> allocated.add(si.pos);

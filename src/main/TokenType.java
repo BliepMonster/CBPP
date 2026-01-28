@@ -16,6 +16,7 @@ public enum TokenType {
     IFDEF,
     UNDEF,
     IFNDEF,
+    IMPORT,
 
     NUM,
     TRUE,

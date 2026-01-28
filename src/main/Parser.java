@@ -133,7 +133,7 @@ public class Parser {
     public Expression unary() {
         if (match(MINUS, BANG, QUESTION)) {
             Token op = previous();
-            Expression r = exponent();
+            Expression r = unary();
             return new UnaryExpression(r, op);
         }
         return exponent();

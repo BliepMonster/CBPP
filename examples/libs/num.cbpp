@@ -1,0 +1,23 @@
+@Library tag
+define LIB_BASIC_NUM_BLEP "";
+
+mfn safe_sub(x: byte, y: byte) -> byte {
+    if (y > x)
+        return 0;
+    else
+        return x-y;
+}
+mfn safe_add(x: byte, y: byte) -> byte {
+     if (x+y<x)
+         return 255;
+     else
+         return x+y;
+}
+mfn clamp(x: byte, min: byte, max: byte) -> byte {
+    if (x < min)
+        return min;
+    else if (x > max)
+        return max;
+    else
+        return x;
+}

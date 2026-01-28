@@ -1,0 +1,86 @@
+@Library tag
+define LIB_BASIC_IO_BLEP "";
+
+
+
+mfn error(type: byte) -> PossibleError {
+    var e: PossibleError = _PossibleError();
+    e.type = type;
+    return e;
+}
+
+mfn sprintv(x: byte) -> NoReturn {
+    mfn sprintc(x: byte) -> NoReturn {
+        print x + '0';
+    }
+    sprintc(x/100);
+    sprintc((x%100)/10);
+    sprintc(x%10);
+}
+
+mfn printv(x: byte) -> NoReturn {
+    mfn printc(x: byte) -> NoReturn {
+        print x + '0';
+    }
+    if (x >= 100) {
+        var h: byte = x/100;
+        printc(h);
+    } if (x >= 10) {
+         var h: byte = (x%100)/10;
+         printc(h);
+         printc(x%10);
+    } else
+         printc(x);
+}
+mfn printv(x: bool) -> NoReturn {
+    if (x)
+        print "true";
+    else
+        print "false";
+}
+
+struct ByteError {
+    result: byte;
+    error: bool;
+}
+
+mfn _ByteError(result: byte, error: bool) -> ByteError {
+    var err: ByteError = _ByteError();
+    err.result = result;
+    err.error = error;
+    return err;
+}
+mfn is_num(x: byte) -> bool: x >= '0' & x <= '9';
+
+mfn num(x: byte) -> byte: x-'0';
+
+mfn input_numc() -> ByteError {
+    var q: byte = $input();
+    if (!is_num(q))
+        return _ByteError(ERROR_INVALID_USER_INPUT, true);
+    else
+        return _ByteError(num(q), false);
+}
+
+mfn input_num_3() -> ByteError {
+    var i: byte = 0;
+    var in: ByteError = input_numc();
+    if (in.error) {
+        return in;
+    } else {
+        i = i+in.result*100;
+        in = input_numc();
+        if (in.error) {
+            return in;
+        } else {
+            i = i+in.result*10;
+            in = input_numc();
+            if (in.error) {
+                return in;
+            } else {
+                i = i+in.result;
+                return _ByteError(i, false);
+            }
+        }
+    }
+}

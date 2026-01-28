@@ -62,7 +62,9 @@ public class Scanner {
                 if (c == 'r' && isNumber(peek())) return rName();
                 else if (isAlpha(c)) return identifier();
                 else if (isNumber(c)) return literal();
-                else throw new ScanException("Invalid token.", line);
+                else
+                    System.out.println(c);
+                throw new ScanException("Invalid token.", line);
         }
     }
     Token literal() {

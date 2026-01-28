@@ -328,7 +328,7 @@ public class IrCompiler implements InstructionVisitor<String> {
     }
     public String visitPutInstruction(PutInstruction instr) {
         Register r = retrieveVariable(instr.variable());
-        byte val = instr.value();
+        int val = instr.value();
         if (!(r instanceof SimpleRegister s))
             throw new IrCompilerException("Invalid operand");
         return buildPutInstruction(val, s);

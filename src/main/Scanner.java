@@ -127,6 +127,7 @@ public class Scanner {
             case "ifndef" -> TokenType.IFNDEF;
             case "native" -> TokenType.NATIVE;
             case "$input" -> TokenType.$INPUT;
+            case "import" -> TokenType.IMPORT;
             default -> TokenType.IDENTIFIER;
         };
     }

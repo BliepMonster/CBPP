@@ -1,0 +1,17 @@
+@Library tag
+define LIB_BASIC_RNG_BLEP "";
+
+struct RandomData {
+    value: byte;
+}
+
+mfn _RandomData(val: byte) -> RandomData {
+    var r: RandomData = _RandomData();
+    r.value = val;
+    return r;
+}
+
+mfn rand(data: RandomData) -> RandomData {
+    data.value = 17*data.value+21;
+    return data;
+}
