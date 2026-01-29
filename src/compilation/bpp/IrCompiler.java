@@ -346,4 +346,49 @@ public class IrCompiler implements InstructionVisitor<String> {
             throw new IrCompilerException("Invalid operand");
         return buildInputInstruction(s);
     }
+    public String visitBitwiseOrInstruction(BitwiseOrInstruction instr) {
+        UniqueVariable  uv1 = instr.v1(),
+                uv2 = instr.v2(),
+                uv3 = instr.result();
+        Register r1 = retrieveVariable(uv1);
+        if (r1 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r2 = retrieveVariable(uv2);
+        if (r2 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r3 = retrieveVariable(uv3);
+        if (r3 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        return buildBitwiseOrInstruction((SimpleRegister) r1, (SimpleRegister) r2, (SimpleRegister) r3);
+    }
+    public String visitBitwiseXorInstruction(BitwiseXorInstruction instr) {
+        UniqueVariable  uv1 = instr.v1(),
+                uv2 = instr.v2(),
+                uv3 = instr.result();
+        Register r1 = retrieveVariable(uv1);
+        if (r1 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r2 = retrieveVariable(uv2);
+        if (r2 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r3 = retrieveVariable(uv3);
+        if (r3 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        return buildBitwiseXorInstruction((SimpleRegister) r1, (SimpleRegister) r2, (SimpleRegister) r3);
+    }
+    public String visitBitwiseAndInstruction(BitwiseAndInstruction instr) {
+        UniqueVariable  uv1 = instr.v1(),
+                uv2 = instr.v2(),
+                uv3 = instr.result();
+        Register r1 = retrieveVariable(uv1);
+        if (r1 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r2 = retrieveVariable(uv2);
+        if (r2 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        Register r3 = retrieveVariable(uv3);
+        if (r3 instanceof StructRegister)
+            throw new IrCompilerException("Invalid operands");
+        return buildBitwiseAndInstruction((SimpleRegister) r1, (SimpleRegister) r2, (SimpleRegister) r3);
+    }
 }

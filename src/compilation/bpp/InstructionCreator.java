@@ -1,5 +1,7 @@
 package compilation.bpp;
 
+import compilation.ir.instructions.math.num.BitwiseOrInstruction;
+
 import static compilation.bpp.IrCompiler.*;
 
 public final class InstructionCreator {
@@ -83,5 +85,14 @@ public final class InstructionCreator {
         return buildCopyInstruction(r1, new SimpleRegister(BOOL_IN)) +
                 "bool;" +
                 buildCopyInstruction(new SimpleRegister(BOOL_OUT), r2);
+    }
+    public static String buildBitwiseOrInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
+        return "bitor "+r1+", "+r2+", "+r3+";";
+    }
+    public static String buildBitwiseXorInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
+        return "bitxor "+r1+", "+r2+", "+r3+";";
+    }
+    public static String buildBitwiseAndInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
+        return "bitand "+r1+", "+r2+", "+r3+";";
     }
 }
