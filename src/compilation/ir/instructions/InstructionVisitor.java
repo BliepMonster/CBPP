@@ -34,4 +34,7 @@ public interface InstructionVisitor<R> {
     R visitCallInstruction(CallInstruction instr);
     R visitSimpleIfInstruction(SimpleIfInstruction instr);
     R visitInputInstruction(InputInstruction instr);
+    R visitBitwiseOrInstruction(BitwiseOrInstruction instr);
+    R visitBitwiseAndInstruction(BitwiseAndInstruction instr);
+    R visitBitwiseXorInstruction(BitwiseXorInstruction instr);
 }
