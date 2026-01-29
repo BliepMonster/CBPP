@@ -1,0 +1,17 @@
+import "examples/libs/err.cbpp";
+import "examples/libs/io.cbpp";
+mfn fib(n: byte) -> byte {
+    var counter: byte = n;
+    var v1: byte = 0;
+    var v2: byte = 1;
+    var temp: byte = 0;
+    while (?counter) {
+        temp = v2;
+        v2 += v1;
+        v1 = temp;
+        counter -= 1;
+    }
+    return v2;
+}
+var input: ByteError = input_num_3();
+printv(fib(input.result));
