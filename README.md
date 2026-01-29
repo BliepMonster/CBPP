@@ -119,3 +119,11 @@ This function will return 2, not 1!
 ### Bugs
 
 * Can't call member (dot) expressions directly on function results
+
+## Changelog
+
+(note: I have no idea how to make changelogs or version numbers)
+v0.1.0:
+* added core language
+v0.1.1:
+* added +=, etc assignment operators
