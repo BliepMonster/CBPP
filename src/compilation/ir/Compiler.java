@@ -218,6 +218,10 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         }
         return null;
     }
+    private void checkValidAssignment(Expression expr) {
+        if (!(expr instanceof IdentifierExpression || expr instanceof DotExpression))
+            throw new CompilerException("Invalid assignment target");
+    }
     public ExpressionResult visitBinaryExpression(BinaryExpression expr) {
         ArrayList<Instruction> out = new ArrayList<>();
         ExpressionResult res1 = expr.left.accept(this);
@@ -227,9 +231,44 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         out.addAll(res2.instructions());
         UniqueVariable result;
         if (expr.operator.type == TokenType.EQ) {
-            if (!(expr.left instanceof IdentifierExpression || expr.left instanceof DotExpression))
-                throw new CompilerException("Invalid assignment target");
+            checkValidAssignment(expr.left);
             out.add(new CopyInstruction(res2.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.PLUS_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new AddInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.MINUS_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new SubInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.STAR_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new MulInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.MOD_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new ModInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.SLASH_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new DivInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.OR_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new OrInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.XOR_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new XorInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.AND_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new AndInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.EXP_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new ExpInstruction(res2.result(), res1.result(), res1.result()));
             return new ExpressionResult(out, res1.result());
         }
         TempAllocationResult ta = scope.allocTemp(getBinaryReturnType(res1.result().type, res2.result().type, expr.operator.type));
@@ -271,11 +310,11 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     }
     public void checkTypeValidity(VariableType t1, VariableType t2, TokenType op) {
         switch (op) {
-            case PLUS, MINUS, STAR, SLASH, EXPONENT, MOD, GT, GTEQ, LT, LTEQ -> {
+            case PLUS, PLUS_EQ, MINUS, MINUS_EQ, STAR, STAR_EQ, SLASH, SLASH_EQ, EXPONENT, EXP_EQ, MOD, MOD_EQ, GT, GTEQ, LT, LTEQ -> {
                 if (!(t1 instanceof ByteType) || !(t2 instanceof ByteType))
                     throw new CompilerException("Invalid types");
             }
-            case OR, AND, XOR -> {
+            case OR, OR_EQ, AND, AND_EQ, XOR, XOR_EQ -> {
                 if (!(t1 instanceof BoolType) || !(t2 instanceof BoolType))
                     throw new CompilerException("Invalid types");
             }

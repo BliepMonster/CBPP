@@ -47,11 +47,12 @@ public class IrCompiler implements InstructionVisitor<String> {
     private final VariableSpace vars = new VariableSpace();
     private Register retrieveVariable(UniqueVariable uv) {
         if (uv instanceof MemberVariable mv) {
+            boolean isStruct = mv.type instanceof StructType;
             int size = mv.type.getSize();
             Register reg = vars.get(mv.getOwnerName());
             if (!(reg instanceof StructRegister sr))
                 throw new IrCompilerException("Invalid variable type");
-            if (size == 1)
+            if (!isStruct)
                 return sr.get(mv.offset);
             else {
                 ArrayList<SimpleRegister> regs = new ArrayList<>();
@@ -138,8 +139,9 @@ public class IrCompiler implements InstructionVisitor<String> {
         Register r1 = retrieveVariable(v1);
         Register r2 = retrieveVariable(v2);
         if (r1 instanceof StructRegister sr1) {
-            if (!(r2 instanceof StructRegister sr2) || sr1.length() != sr2.length())
+            if (!(r2 instanceof StructRegister sr2) || sr1.length() != sr2.length()) {
                 throw new IrCompilerException("Invalid operands");
+            }
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < sr1.length(); i++) {
                 sb.append(buildCopyInstruction(sr1.get(i), sr2.get(i)));

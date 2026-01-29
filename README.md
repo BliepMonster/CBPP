@@ -101,3 +101,21 @@ Compile main.CBPP.java using java 25 (or higher) and run it. The command line ar
 1. The file that contains your code
 2. The output file
 All existing content in the output file is overridden.
+
+## IMPORTANT
+
+Some statements or expressions may function weirdly when compared to other languages:
+* And/or/xor operators use only one symbol (& is logical and, not bitwise and)
+* And/or operators do not short-circuit
+* !!! Return statements do not exit the function !!!
+```
+mfn f() -> byte {
+    return 1;
+    return 2;
+}
+```
+This function will return 2, not 1!
+
+### Bugs
+
+* Can't call member (dot) expressions directly on function results

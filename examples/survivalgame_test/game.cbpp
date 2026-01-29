@@ -1,6 +1,8 @@
 import "examples/libs/err.cbpp";
 import "examples/libs/io.cbpp";
 import "examples/libs/rng.cbpp";
+@define MAIN "";
+ifdef MAIN {
 struct Player {
     health: byte;
     hunger: byte;
@@ -19,7 +21,10 @@ mfn _GameState() -> GameState {
     state.player = _Player();
     state.game_running = true;
     print "Insert random seed here: ";
-    rand = _RandomData(input_num_3());
+    var r: ByteError = input_num_3();
+    if (r.error)
+        panic();
+    state.rand = _RandomData(r.result);
     return state;
 }
 
@@ -36,3 +41,6 @@ while (state.game_running) {
         state.game_running = false;
 }
 print "Game over.";
+}
+var e: ByteError = input_num_3();
+printv(e.result);

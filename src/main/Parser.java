@@ -58,7 +58,7 @@ public class Parser {
     }
     public Expression assignment() {
         Expression expr = xor();
-        if (match(EQ)) {
+        if (match(EQ, PLUS_EQ, MINUS_EQ, EXP_EQ, MOD_EQ, STAR_EQ, SLASH_EQ, OR_EQ, XOR_EQ, AND_EQ)) {
             Token op = previous();
             Expression right = assignment();
             if (!(expr instanceof IdentifierExpression || expr instanceof DotExpression))
@@ -173,12 +173,12 @@ public class Parser {
         String name = previous().text;
         if (match(LPAREN)) {
             ArrayList<Expression> args = new ArrayList<>();
-            if (match(RPAREN))
-                return new CallExpression(name, args);
-            args.add(expression());
-            while (!match(RPAREN)) {
-                consume(COMMA, "Expected comma");
+            if (!match(RPAREN)) {
                 args.add(expression());
+                while (!match(RPAREN)) {
+                    consume(COMMA, "Expected comma");
+                    args.add(expression());
+                }
             }
             expr = new CallExpression(name, args);
         } else

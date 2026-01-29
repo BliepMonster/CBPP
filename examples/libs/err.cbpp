@@ -22,3 +22,9 @@ mfn panic() -> NoReturn {
     @skip past bpp temps to -1, crashing the program
     native native "<<<<<<<<<";
 }
+
+mfn error(type: byte) -> PossibleError {
+    var e: PossibleError = _PossibleError();
+    e.type = type;
+    return e;
+}

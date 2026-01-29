@@ -17,18 +17,18 @@ mfn hunt(state: GameState) -> GameState {
 mfn perform(id: byte, state: GameState) -> GameState {
     if (id == 000)
         return hunt(state);
-    else if (id == 001)
-        return cut_wood(state);
+    @else if (id == 001)
+        @return cut_wood(state);
     else {
         print "Invalid action id";
-        error();
+        panic();
     }
 }
 mfn perform_actions(state: GameState) -> GameState {
     var action: ByteError = input_num_3();
     if (action.error) {
         print "Invalid action";
-        error();
+        panic();
     } var id: byte = action.result;
-    perform(id);
+    perform(id, state);
 }
