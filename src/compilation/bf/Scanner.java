@@ -122,6 +122,9 @@ public class Scanner {
             case "import" -> TokenType.IMPORT;
             case "divmod" -> TokenType.DIVMOD;
             case "move" -> TokenType.MOVE;
+            case "bitor" -> TokenType.BITOR;
+            case "bitxor" -> TokenType.BITXOR;
+            case "bitand" -> TokenType.BITAND;
             default -> TokenType.OTHER;
         };
     }
