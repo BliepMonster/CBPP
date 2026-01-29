@@ -104,6 +104,8 @@ All existing content in the output file is overridden.
 
 ## IMPORTANT
 
+This code is not optimized and will produce excessive copying.
+
 Some statements or expressions may function weirdly when compared to other languages:
 * And/or/xor operators use only one symbol: & is logical and, not bitwise and (this is currently being changed to allow bitwise operators)
 * And/or operators do not short-circuit
