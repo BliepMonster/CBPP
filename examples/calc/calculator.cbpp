@@ -1,0 +1,38 @@
+@calculates an expression consisting of 2 bytes and an operator
+import "examples/libs/err.cbpp";
+import "examples/libs/io.cbpp";
+
+mfn calculate(x: byte, y: byte, op: byte) -> byte {
+    if (op == '+')
+        return x+y;
+    else if (op == '-')
+        return x-y;
+    else if (op == '*')
+        return x*y;
+    else if (op == '/')
+        return x/y;
+    else if (op == '^')
+        return x**y;
+    else if (op == '%')
+        return x%y;
+    else
+        panic();
+}
+
+print "insert operator here: ";
+var in: byte = $input();
+print 10;
+print "insert operand 1 here: ";
+var o1: ByteError = input_num_3();
+if (o1.error)
+    panic();
+print 10;
+print "insert operand 2 here: ";
+var o2: ByteError = input_num_3();
+if (o2.error)
+    panic();
+print 10;
+var v1: byte = o1.result;
+var v2: byte = o2.result;
+print "The result is: ";
+printv(calculate(v1, v2, in));
