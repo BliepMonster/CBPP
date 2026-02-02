@@ -270,12 +270,27 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             checkValidAssignment(expr.left);
             out.add(new ExpInstruction(res2.result(), res1.result(), res1.result()));
             return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.BITOR_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new BitwiseOrInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.BITXOR_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new BitwiseXorInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
+        } else if (expr.operator.type == TokenType.BITAND_EQ) {
+            checkValidAssignment(expr.left);
+            out.add(new BitwiseAndInstruction(res2.result(), res1.result(), res1.result()));
+            return new ExpressionResult(out, res1.result());
         }
         TempAllocationResult ta = scope.allocTemp(getBinaryReturnType(res1.result().type, res2.result().type, expr.operator.type));
         out.add(ta.instr());
         result = scope.retrieveVar(ta.tempName());
         switch (expr.operator.type) {
             case PLUS -> out.add(new AddInstruction(res1.result(), res2.result(), result));
+            case BITAND -> out.add(new BitwiseAndInstruction(res1.result(), res2.result(), result));
+            case BITOR -> out.add(new BitwiseOrInstruction(res1.result(), res2.result(), result));
+            case BITXOR -> out.add(new BitwiseXorInstruction(res1.result(), res2.result(), result));
             case MINUS -> out.add(new SubInstruction(res1.result(), res2.result(), result));
             case STAR -> out.add(new MulInstruction(res1.result(), res2.result(), result));
             case SLASH -> out.add(new DivInstruction(res1.result(), res2.result(), result));
@@ -310,7 +325,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     }
     public void checkTypeValidity(VariableType t1, VariableType t2, TokenType op) {
         switch (op) {
-            case PLUS, PLUS_EQ, MINUS, MINUS_EQ, STAR, STAR_EQ, SLASH, SLASH_EQ, EXPONENT, EXP_EQ, MOD, MOD_EQ, GT, GTEQ, LT, LTEQ -> {
+            case PLUS, PLUS_EQ, MINUS, MINUS_EQ, STAR, STAR_EQ, SLASH, SLASH_EQ, EXPONENT, EXP_EQ, MOD, MOD_EQ, GT, GTEQ, LT, LTEQ, BITOR, BITAND, BITXOR, BITOR_EQ, BITAND_EQ, BITXOR_EQ -> {
                 if (!(t1 instanceof ByteType) || !(t2 instanceof ByteType))
                     throw new CompilerException("Invalid types");
             }
@@ -327,8 +342,8 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     }
     public VariableType getBinaryReturnType(VariableType t1, VariableType t2, TokenType op) {
         return switch(op) {
-            case PLUS, MINUS, STAR, SLASH, EXPONENT, MOD -> ByteType.INSTANCE;
-            case OR, AND, XOR, EQEQ, NEQ, GT, GTEQ, LT, LTEQ-> BoolType.INSTANCE;
+            case PLUS, PLUS_EQ, MINUS_EQ, STAR_EQ, SLASH_EQ, EXP_EQ, MOD_EQ, BITAND_EQ, BITOR_EQ, BITXOR_EQ, BITAND, BITOR, BITXOR, MINUS, STAR, SLASH, EXPONENT, MOD -> ByteType.INSTANCE;
+            case OR, OR_EQ, AND_EQ, XOR_EQ, AND, XOR, EQEQ, NEQ, GT, GTEQ, LT, LTEQ-> BoolType.INSTANCE;
             case EQ -> t1;
             default -> throw new CompilerException("Invalid BINARY operator");
         };

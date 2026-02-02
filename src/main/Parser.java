@@ -58,7 +58,7 @@ public class Parser {
     }
     public Expression assignment() {
         Expression expr = xor();
-        if (match(EQ, PLUS_EQ, MINUS_EQ, EXP_EQ, MOD_EQ, STAR_EQ, SLASH_EQ, OR_EQ, XOR_EQ, AND_EQ)) {
+        if (match(EQ, PLUS_EQ, MINUS_EQ, EXP_EQ, MOD_EQ, STAR_EQ, SLASH_EQ, OR_EQ, XOR_EQ, AND_EQ, BITAND_EQ, BITOR_EQ, BITXOR_EQ)) {
             Token op = previous();
             Expression right = assignment();
             if (!(expr instanceof IdentifierExpression || expr instanceof DotExpression))
@@ -104,10 +104,37 @@ public class Parser {
         return expr;
     }
     public Expression comparison() {
-        Expression expr = term();
+        Expression expr = bitOr();
         while (match(GT, LT, GTEQ, LTEQ)) {
             Token op = previous();
-            Expression right = term();
+            Expression right = bitOr();
+            expr = new BinaryExpression(expr, op, right);
+        }
+        return expr;
+    }
+    public Expression bitOr() {
+        Expression expr = bitXor();
+        while (match(BITOR)) {
+            Token op = previous();
+            Expression right = bitXor();
+            expr = new BinaryExpression(expr, op, right);
+        }
+        return expr;
+    }
+    public Expression bitXor() {
+        Expression expr = bitAnd();
+        while (match(BITXOR)) {
+            Token op = previous();
+            Expression right = bitAnd();
+            expr = new BinaryExpression(expr, op, right);
+        }
+        return expr;
+    }
+    public Expression bitAnd() {
+        Expression expr = term();
+        while (match(BITAND)) {
+            Token op = previous();
+            Expression right = bitAnd();
             expr = new BinaryExpression(expr, op, right);
         }
         return expr;

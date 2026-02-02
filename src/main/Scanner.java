@@ -82,11 +82,11 @@ public class Scanner {
                 break;
             case '=': tokens.add(makeToken(match('=') ? TokenType.EQEQ : TokenType.EQ));
                 break;
-            case '|': tokens.add(makeToken(match('=') ? OR_EQ : TokenType.OR));
+            case '|': tokens.add(makeToken(match('|') ? match('=') ? OR_EQ : OR : match('=') ? BITOR_EQ : BITOR));
                 break;
-            case '^': tokens.add(makeToken(match('=') ? XOR_EQ : TokenType.XOR));
+            case '^': tokens.add(makeToken(match('^') ? match('=') ? XOR_EQ : XOR : match('=') ? BITXOR_EQ : BITXOR));
                 break;
-            case '&': tokens.add(makeToken(match('=') ? AND_EQ : TokenType.AND));
+            case '&': tokens.add(makeToken(match('&') ? match('=') ? AND_EQ : AND : match('=') ? BITAND_EQ : BITAND));
                 break;
             case '\0': break;
             default:

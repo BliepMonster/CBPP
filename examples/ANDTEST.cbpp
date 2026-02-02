@@ -1,0 +1,4 @@
+import "examples/libs/err.cbpp";
+import "examples/libs/io.cbpp";
+
+printv(48 & 255);
