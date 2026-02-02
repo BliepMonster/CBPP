@@ -26,7 +26,10 @@ public class ConstantFolder implements ExpressionVisitor<Expression>,  Statement
         return expr;
     }
     public Expression visitCallExpression(CallExpression expr) {
-        return expr;
+        ArrayList<Expression> args = new ArrayList<>();
+        for (Expression e : expr.args)
+            args.add(e.accept(this));
+        return new CallExpression(expr.function, args);
     }
     public Expression visitIdentifierExpression(IdentifierExpression expr) {
         return expr;
