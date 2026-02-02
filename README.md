@@ -19,7 +19,6 @@ CBPP is a statically typed language built for fun. It compiles to Brainfuck.
 ### Due to limitations of compiler
 
 * Arrays (fixed size)
-* Bitwise operators
 * Enums (unions)
 
 ## Examples
@@ -89,8 +88,8 @@ The 'preprocessor' runs after lexing and is responsible for resolving macros and
 There are 7 commands:
 * define (token) (string): creates a macro that replaces the token with the content of the string if it is found in the code
 * undef (token): removes the macro
-* ifdef (token) {(body)}: compiles the body ONLY if the macro exists
-* ifndef (token) {(body)}: compiles the body ONLY if the macro does not exist
+* ifdef (token) {(body)}: compiles the body only if the macro exists (useful for checking if a library or file is imported)
+* ifndef (token) {(body)}: compiles the body only if the macro does not exist (useful for not importing a file twice or to create user-defined flags)
 * native (string): inserts the string as IR2 (similar to assembly). Can be used for moving the pointer to a specific register
 * native native (string): inserts the string as Brainfuck in the output
 * import (string): inserts the file at address (string) in this file and scans it.
@@ -102,12 +101,15 @@ Compile main.CBPP.java using java 25 (or higher) and run it. The command line ar
 2. The output file
 All existing content in the output file is overridden.
 
+## Optimizations
+
+This is the first project I made that contains compiler optimizations. These optimizations are restricted to constant folding for now, which takes place after parsing.
+
 ## IMPORTANT
 
 This code is not optimized and will produce excessive copying.
 
 Some statements or expressions may function weirdly when compared to other languages:
-* And/or/xor operators use only one symbol: & is logical and, not bitwise and (this is currently being changed to allow bitwise operators)
 * And/or operators do not short-circuit
 * !!! Return statements do not exit the function !!!
 ```
@@ -121,11 +123,3 @@ This function will return 2, not 1!
 ### Bugs
 
 * Can't call member (dot) expressions directly on function results
-
-## Changelog
-
-(note: I have no idea how to make changelogs or version numbers)
-v0.1.0:
-* added core language
-v0.1.1:
-* added +=, etc assignment operators
