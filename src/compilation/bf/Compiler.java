@@ -13,6 +13,7 @@ class CompilerException extends RuntimeException {
 }
 
 public class Compiler {
+    private static final String DM_ALGO = "[->[->+>>]>[<<+>>[-<+>]>+>>]<<<<<]>[>>>]>[[-<+>]>+>>]<<<<<";
     static final int SPACE_REG = 0;
     static final int TEMP_REG1 = 1;
     static final int TEMP_REG2 = 2;
@@ -21,12 +22,15 @@ public class Compiler {
     static final int TEMP_REG5 = 5;
     static final int TEMP_REG6 = 6;
     static final int TEMP_REG7 = 7;
-    static final int NUM_SPECIAL_REGS = 8;
+    static final int TEMP_REG8 = 8;
+    static final int TEMP_REG9 = 9;
+    static final int TEMP_REG10 = 10;
+    static final int NUM_SPECIAL_REGS = 11;
     static final String V_ID = "V26.1.06";
     int rpos = 0;
     int position = 0;
     private static final HashMap<String, String>    macros = new HashMap<>(),
-                                                    cmacros = new HashMap<>();
+            cmacros = new HashMap<>();
     private static final HashMap<String, Integer>   regdefs = new HashMap<>();
     ArrayList<Token> tokens;
     public String compile(ArrayList<Token> tokens) {
@@ -595,8 +599,7 @@ public class Compiler {
                         .append("]");
                 //START ALGO
                 sb.append(move(TEMP_REG1))
-                        .append("[->[->+>>]>[<<+>>[-<+>]>+>>]<<<<<]\n" +
-                                ">[>>>]>[[-<+>]>+>>]<<<<<")
+                        .append(DM_ALGO)
                         .append(move(TEMP_REG2))
                         .append("[-]")
                         .append(move(TEMP_REG3))
@@ -682,5 +685,8 @@ public class Compiler {
         }
         rpos = currentR;
         return s;
+    }
+    public String copyValue(int r1, int r2, int tempr) {
+        return moveValue(r1, tempr)+move(tempr)+"[-"+move(r2)+"+"+move(r1)+"+"+move(tempr)+"]";
     }
 }

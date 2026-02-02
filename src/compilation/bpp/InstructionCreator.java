@@ -58,10 +58,7 @@ public final class InstructionCreator {
         return "eq "+r1+", "+r2+", "+r3+";";
     }
     public static String buildAndInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
-        return buildCopyInstruction(r1, new SimpleRegister(B1)) +
-                buildCopyInstruction(r2, new SimpleRegister(B2)) +
-                "and;" +
-                buildCopyInstruction(new SimpleRegister(BR), r3);
+        return buildMulInstruction(r1, r2, r3);
     }
     public static String buildOrInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
         return buildCopyInstruction(r1, new SimpleRegister(B1)) +
@@ -87,12 +84,21 @@ public final class InstructionCreator {
                 buildCopyInstruction(new SimpleRegister(BOOL_OUT), r2);
     }
     public static String buildBitwiseOrInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
-        return "bitor "+r1+", "+r2+", "+r3+";";
+        return buildCopyInstruction(r1, new SimpleRegister(BIT_IN1)) +
+                buildCopyInstruction(r2, new SimpleRegister(BIT_IN2)) +
+                "bitor;" +
+                buildCopyInstruction(new SimpleRegister(BIT_OUT), r3);
     }
     public static String buildBitwiseXorInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
-        return "bitxor "+r1+", "+r2+", "+r3+";";
+        return buildCopyInstruction(r1, new SimpleRegister(BIT_IN1)) +
+                buildCopyInstruction(r2, new SimpleRegister(BIT_IN2)) +
+                "bitxor;" +
+                buildCopyInstruction(new SimpleRegister(BIT_OUT), r3);
     }
     public static String buildBitwiseAndInstruction(SimpleRegister r1, SimpleRegister r2, SimpleRegister r3) {
-        return "bitand "+r1+", "+r2+", "+r3+";";
+        return buildCopyInstruction(r1, new SimpleRegister(BIT_IN1)) +
+                buildCopyInstruction(r2, new SimpleRegister(BIT_IN2)) +
+                "bitand;" +
+                buildCopyInstruction(new SimpleRegister(BIT_OUT), r3);
     }
 }

@@ -1,0 +1,10 @@
+import "examples/libs/err.cbpp";
+import "examples/libs/io.cbpp";
+
+var v1: ByteError = input_num_3();
+var v2: ByteError = input_num_3();
+sprintv(v1.result);
+print ",";
+sprintv(v2.result);
+print ":";
+print (v1.result & v2.result);

@@ -46,9 +46,6 @@ enum TokenType {
     IMPORT,
     DIVMOD,
     MOVE,
-    BITOR,
-    BITAND,
-    BITXOR,
 
     RNAME, // register
     LITERAL,
