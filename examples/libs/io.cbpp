@@ -17,11 +17,9 @@ mfn printv(x: byte) -> NoReturn {
         print x + '0';
     }
     if (x >= 100) {
-        var h: byte = x/100;
-        printc(h);
+        printc(x/100);
     } if (x >= 10) {
-         var h: byte = (x/10)%10;
-         printc(h);
+         printc((x/10)%10);
     }
     printc(x%10);
 }
@@ -43,7 +41,7 @@ mfn _ByteError(result: byte, error: bool) -> ByteError {
     err.error = error;
     return err;
 }
-mfn is_num(x: byte) -> bool: x >= '0' & x <= '9';
+mfn is_num(x: byte) -> bool: x >= '0' && x <= '9';
 
 mfn num(x: byte) -> byte: x-'0';
 
