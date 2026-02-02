@@ -19,7 +19,6 @@ CBPP is a statically typed language built for fun. It compiles to Brainfuck.
 ### Due to limitations of compiler
 
 * Arrays (fixed size)
-* Bitwise operators
 * Enums (unions)
 
 ## Examples
@@ -105,7 +104,6 @@ All existing content in the output file is overridden.
 ## IMPORTANT
 
 Some statements or expressions may function weirdly when compared to other languages:
-* And/or/xor operators use only one symbol (& is logical and, not bitwise and)
 * And/or operators do not short-circuit
 * !!! Return statements do not exit the function !!!
 ```
@@ -119,11 +117,3 @@ This function will return 2, not 1!
 ### Bugs
 
 * Can't call member (dot) expressions directly on function results
-
-## Changelog
-
-(note: I have no idea how to make changelogs or version numbers)
-v0.1.0:
-* added core language
-v0.1.1:
-* added +=, etc assignment operators
