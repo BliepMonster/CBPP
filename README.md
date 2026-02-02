@@ -107,6 +107,8 @@ This is the first project I made that contains compiler optimizations. These opt
 
 ## IMPORTANT
 
+This code is not optimized and will produce excessive copying.
+
 Some statements or expressions may function weirdly when compared to other languages:
 * And/or operators do not short-circuit
 * !!! Return statements do not exit the function !!!
