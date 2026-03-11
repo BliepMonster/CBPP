@@ -269,8 +269,10 @@ public class Parser {
     }
     public Statement varStatement() {
         String assigned = consume(IDENTIFIER, "Expected identifier").text;
-        consume(COLON, "Expected ':'");
-        String typeName = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        String typeName = "";
+        if (match(COLON)) {
+            typeName = consume(IDENTIFIER, "Expected IDENTIFIER").text;
+        }
         consume(EQ, "Expected '='");
         Expression assignment = expression();
         consumeSemicolon();
@@ -351,10 +353,9 @@ public class Parser {
         String name = consume(IDENTIFIER, "Expected IDENTIFIER").text;
         consume(LBRACE, "Expected '{'");
         ArrayList<Variable> fields = new ArrayList<>();
-        // AT LEAST ONE FIELD
-        do {
+        while (!match(RBRACE)) {
             fields.add(structField());
-        } while (!match(RBRACE));
+        }
         return new StructStatement(name, fields);
     }
     public Variable structField() {

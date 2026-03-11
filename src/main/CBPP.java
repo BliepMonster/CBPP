@@ -31,9 +31,7 @@ public class CBPP {
 
         String output = args[1];
         FileOutputStream out = new FileOutputStream(output);
-        PrintStream stream = new PrintStream(out);
         String bpp = new IrCompiler().compile(instructions);
-        stream.print(new BfCompiler().compile(bpp));
-        stream.close();
+        new BfCompiler().compile(bpp, out);
     }
 }

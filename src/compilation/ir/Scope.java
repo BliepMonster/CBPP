@@ -42,7 +42,7 @@ public class Scope {
     public ArrayList<Instruction> freeAll() {
         ArrayList<Instruction> instructions = new ArrayList<>();
         for (UniqueVariable var : variables.values()) {
-            instructions.add(new FreeInstruction(var.getUniqueName()));
+            instructions.add(new FreeInstruction(var));
         }
         variables.clear();
         structs.clear();
@@ -97,6 +97,6 @@ public class Scope {
     public Instruction freeVar(String name) {
         UniqueVariable uv = variables.get(name);
         variables.remove(name);
-        return new FreeInstruction(uv.name);
+        return new FreeInstruction(uv);
     }
 }

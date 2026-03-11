@@ -77,7 +77,7 @@ public class IfWhileSimplifier implements InstructionVisitor<ArrayList<Instructi
             body.addAll(i.accept(this));
         body.add(new ClearInstruction(uv));
         out.add(new WhileInstruction(body, uv));
-        out.add(new FreeInstruction(fullName));
+        out.add(new FreeInstruction(uv));
         return out;
     }
 

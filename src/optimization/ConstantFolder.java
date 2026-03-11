@@ -207,23 +207,40 @@ public class ConstantFolder implements ExpressionVisitor<Expression>,  Statement
 
     @Override
     public Statement visitIfStatement(IfStatement stmt) {
+        Expression expr = stmt.expr.accept(this);
+        if (expr instanceof LiteralExpression lit && lit.value instanceof Boolean b)
+            if (b)
+                return stmt.thenBranch.accept(this);
+            else if (stmt.hasElseStatement())
+                return stmt.elseBranch.accept(this);
+            else return new EmptyStatement();
         if (!stmt.hasElseStatement())
-            return new IfStatement(stmt.expr.accept(this), stmt.thenBranch.accept(this), null);
-        return new IfStatement(stmt.expr.accept(this), stmt.thenBranch.accept(this), stmt.elseBranch.accept(this));
+            return new IfStatement(expr, stmt.thenBranch.accept(this), null);
+        return new IfStatement(expr, stmt.thenBranch.accept(this), stmt.elseBranch.accept(this));
     }
 
     @Override
     public Statement visitPrintstrStatement(PrintstrStatement stmt) {
+        if (stmt.str.isEmpty())
+            return new EmptyStatement();
         return stmt;
     }
 
     @Override
     public Statement visitNativeStatement(NativeStatement stmt) {
+        if (stmt.code.isEmpty())
+            return new EmptyStatement();
         return stmt;
     }
 
     @Override
     public Statement visitWhileStatement(WhileStatement stmt) {
-        return new WhileStatement(stmt.expr.accept(this), stmt.stmt.accept(this));
+        Expression expr = stmt.expr.accept(this);
+        if (expr instanceof LiteralExpression lit && lit.value instanceof Boolean b && !b)
+            return new EmptyStatement();
+        return new WhileStatement(expr, stmt.stmt.accept(this));
+    }
+    public Statement visitEmptyStatement(EmptyStatement stmt) {
+        return stmt;
     }
 }

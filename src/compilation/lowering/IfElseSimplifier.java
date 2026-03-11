@@ -93,7 +93,6 @@ public class IfElseSimplifier implements InstructionVisitor<ArrayList<Instructio
     public ArrayList<Instruction> visitIfInstruction(IfInstruction instr) {
         ArrayList<Instruction> out = new ArrayList<>();
         int id = counter++;
-        String elseName = "#else_"+id;
         UniqueVariable uv = new UniqueVariable("#else", id, BoolType.INSTANCE);
         if (instr.hasElseBranch()) {
             out.add(new AllocateInstruction(uv, 1));
@@ -114,7 +113,7 @@ public class IfElseSimplifier implements InstructionVisitor<ArrayList<Instructio
             elseBranch.addAll(i.accept(this));
         }
         out.add(new SimpleIfInstruction(uv, elseBranch));
-        out.add(new FreeInstruction(elseName));
+        out.add(new FreeInstruction(uv));
         return out;
     }
 

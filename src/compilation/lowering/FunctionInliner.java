@@ -10,12 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-class FunctionInlinerException extends RuntimeException {
-    public FunctionInlinerException(String s) {
-        super(s);
-    }
-}
-
 public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction>> {
     HashMap<String, ArrayList<Instruction>> macros = new HashMap<>();
     public ArrayList<Instruction> inline(ArrayList<Instruction> code) {
@@ -77,7 +71,19 @@ public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction
 
     @Override
     public ArrayList<Instruction> visitIfInstruction(IfInstruction instr) {
-        throw new FunctionInlinerException("Statement should not exist");
+        ArrayList<Instruction> body = new ArrayList<>();
+        for (Instruction i : instr.thenBranch()) {
+            body.addAll(i.accept(this));
+        }
+        if (!instr.hasElseBranch())
+            return new ArrayList<>(Collections.singleton(new IfInstruction(instr.condition(), body, null)));
+        else {
+            ArrayList<Instruction> body2 = new ArrayList<>();
+            for (Instruction i : instr.elseBranch()) {
+                body2.addAll(i.accept(this));
+            }
+            return new ArrayList<>(Collections.singleton(new IfInstruction(instr.condition(), body, body2)));
+        }
     }
 
     @Override
@@ -117,7 +123,11 @@ public class FunctionInliner implements InstructionVisitor<ArrayList<Instruction
 
     @Override
     public ArrayList<Instruction> visitSimpleIfInstruction(SimpleIfInstruction instr) {
-        throw new FunctionInlinerException("Instruction should not exist");
+        ArrayList<Instruction> body = new ArrayList<>();
+        for (Instruction i : instr.instructions()) {
+            body.addAll(i.accept(this));
+        }
+        return new ArrayList<>(Collections.singleton(new SimpleIfInstruction(instr.condition(), body)));
     }
 
     @Override

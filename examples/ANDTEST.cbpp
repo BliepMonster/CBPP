@@ -1,4 +1,4 @@
 import "examples/libs/err.cbpp";
 import "examples/libs/io.cbpp";
-
-printv(48 & 255);
+var thirty_eight = 38;
+printv(thirty_eight);

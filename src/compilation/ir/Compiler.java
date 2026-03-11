@@ -66,7 +66,11 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     public ArrayList<Instruction> visitVarStatement(VarStatement stmt) {
         String name = stmt.var;
         ExpressionResult res = stmt.assignment.accept(this);
-        VariableType type = getType(stmt.type);
+        VariableType type;
+        if (stmt.type.isEmpty())
+            type = res.result().type;
+        else
+            type = getType(stmt.type);
         if (!res.result().type.equals(type)) {
             throw new CompilerException("Type mismatch. No further information available.");
         }
@@ -463,8 +467,8 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             throw new CompilerException("Invalid member expression");
         int i = type.getFieldOffset(expr.right);
         if (uv instanceof MemberVariable mem)
-            return new ExpressionResult(new ArrayList<>(), new MemberVariable(mem.name, mem.identifier, type.getType(i), i+mem.offset));
-        return new ExpressionResult(new ArrayList<>(), new MemberVariable(uv.name, uv.identifier, type.getType(i), i));
+            return new ExpressionResult(res.instructions(), new MemberVariable(mem.name, mem.identifier, type.getType(i), i+mem.offset));
+        return new ExpressionResult(res.instructions(), new MemberVariable(uv.name, uv.identifier, type.getType(i), i));
     }
     public ExpressionResult visitInputExpression(InputExpression expr) {
         ArrayList<Instruction> out = new ArrayList<>();
@@ -473,5 +477,8 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
         UniqueVariable uv = scope.retrieveVar(temp.tempName());
         out.add(new InputInstruction(uv));
         return new ExpressionResult(out, uv);
+    }
+    public ArrayList<Instruction> visitEmptyStatement(EmptyStatement stmt) {
+        return new ArrayList<>();
     }
 }

@@ -80,8 +80,8 @@ public class IrCompiler implements InstructionVisitor<String> {
         return "";
     }
     public String visitFreeInstruction(FreeInstruction instr) {
-        Register r = vars.get(instr.name());
-        vars.remove(instr.name());
+        Register r = vars.get(instr.uv().getUniqueName());
+        vars.remove(instr.uv().getUniqueName());
         if (r instanceof SimpleRegister s) {
             return buildClearInstruction(s);
         }

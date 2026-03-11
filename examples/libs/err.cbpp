@@ -2,9 +2,7 @@
 define LIB_BASIC_ERRORS_BLEP "";
 
 @Workaround for the "everything must return"-rule
-struct NoReturn {
-    dummy: byte;
-}
+struct NoReturn {}
 
 define NO_ERROR "0";
 define ERROR_INVALID_ARGUMENT "1";

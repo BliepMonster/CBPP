@@ -12,4 +12,5 @@ public interface StatementVisitor<R> {
     R visitStructStatement(StructStatement stmt);
     R visitReturnStatement(ReturnStatement stmt);
     R visitPrintstrStatement(PrintstrStatement stmt);
+    R visitEmptyStatement(EmptyStatement stmt);
 }
