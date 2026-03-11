@@ -61,6 +61,12 @@ public class ConstantFolder implements ExpressionVisitor<Expression>,  Statement
                     throw new ConstantFolderException("Invalid operand");
                 return new LiteralExpression(!b);
             }
+            case HASH -> {
+                Object o = lit.value;
+                if (!(o instanceof Boolean b))
+                    throw new ConstantFolderException("Invalid operand");
+                return new LiteralExpression(b ? 1 : 0);
+            }
             default -> throw new ConstantFolderException("Invalid operation");
         }
     }

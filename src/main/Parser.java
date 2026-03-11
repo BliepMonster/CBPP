@@ -158,7 +158,7 @@ public class Parser {
         return expr;
     }
     public Expression unary() {
-        if (match(MINUS, BANG, QUESTION)) {
+        if (match(MINUS, BANG, QUESTION, HASH)) {
             Token op = previous();
             Expression r = unary();
             return new UnaryExpression(r, op);

@@ -64,6 +64,8 @@ Variables are defined using the var keyword, followed by the name and the type. 
 
 There are 2 native types, byte and bool. All others must be defined using structs.
 
+Type inference works by removing the type and the colon.
+
 ### Structs
 
 Structs largely follow Rust syntax:
@@ -81,6 +83,11 @@ Define functions using the "mfn" keyword. Functions largely follow Rust syntax, 
 ### Comments
 
 Line comments are created using the @ symbol.
+
+### New operators
+
+* `?` : converts a byte to a bool
+* `#` : converts a bool to a byte
 
 ### Preprocessor
 
@@ -119,7 +126,3 @@ mfn f() -> byte {
 }
 ```
 This function will return 2, not 1!
-
-### Bugs
-
-* Can't call member (dot) expressions directly on function results

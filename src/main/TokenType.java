@@ -43,6 +43,7 @@ public enum TokenType {
     XOR,
     QUESTION,
     COLON,
+    HASH,
 
     EQ,
     EQEQ,

@@ -363,6 +363,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             case MINUS -> out.add(new NegInstruction(er.result(), v));
             case QUESTION -> out.add(new BoolInstruction(er.result(), v));
             case BANG -> out.add(new InvInstruction(er.result(), v));
+            case HASH -> {}
             default -> throw new CompilerException("Invalid UNARY operator");
         }
         return new ExpressionResult(out, v);
@@ -381,13 +382,17 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
                 if (!(t instanceof BoolType))
                     throw new CompilerException("Invalid type");
             }
+            case HASH -> {
+                if (!(t instanceof BoolType))
+                    throw new CompilerException("Invalid type");
+            }
             default -> throw new CompilerException("Invalid operator");
         }
     }
     public VariableType getUnaryReturnType(TokenType op) {
         return switch(op) {
             case BANG, QUESTION -> BoolType.INSTANCE;
-            case MINUS -> ByteType.INSTANCE;
+            case MINUS, HASH -> ByteType.INSTANCE;
             default -> throw new CompilerException("Invalid UNARY operator");
         };
     }

@@ -45,6 +45,8 @@ public class Scanner {
                 break;
             case '.': tokens.add(makeToken(TokenType.DOT));
                 break;
+            case '#': tokens.add(makeToken(TokenType.HASH));
+                break;
             case '\'':
                 advance();
                 consume('\'', "Expected char literal.");
