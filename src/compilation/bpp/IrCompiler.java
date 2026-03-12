@@ -337,7 +337,7 @@ public class IrCompiler implements InstructionVisitor<String> {
             sb.append(buildPutInstruction(1, s2));
             for (int i = 0; i < sr1.length(); i++) {
                 sb.append(buildBoolInstruction(sr1.get(i), TEMP0));
-                sb.append(buildAndInstruction(TEMP0, TEMP1, TEMP1));
+                sb.append(buildOrInstruction(TEMP0, TEMP1, TEMP1));
             }
             sb.append(buildMoveInstruction(TEMP1, s2));
             return sb.toString();

@@ -375,7 +375,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
                     throw new CompilerException("Invalid type");
             }
             case QUESTION -> {
-                if (t instanceof BoolType || t instanceof StructType)
+                if (t instanceof BoolType)
                     throw new CompilerException("Invalid type");
             }
             case BANG, HASH -> {
