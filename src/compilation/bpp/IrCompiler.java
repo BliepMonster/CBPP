@@ -330,7 +330,19 @@ public class IrCompiler implements InstructionVisitor<String> {
     public String visitBoolInstruction(BoolInstruction instr) {
         Register r1 = retrieveVariable(instr.v());
         Register r2 = retrieveVariable(instr.result());
-        if (!(r1 instanceof SimpleRegister s1) || !(r2 instanceof SimpleRegister s2))
+        if (!(r2 instanceof SimpleRegister s2))
+            throw new IrCompilerException("Invalid result");
+        if (r1 instanceof StructRegister sr1) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(buildPutInstruction(1, s2));
+            for (int i = 0; i < sr1.length(); i++) {
+                sb.append(buildBoolInstruction(sr1.get(i), TEMP0));
+                sb.append(buildAndInstruction(TEMP0, TEMP1, TEMP1));
+            }
+            sb.append(buildMoveInstruction(TEMP1, s2));
+            return sb.toString();
+        }
+        if (!(r1 instanceof SimpleRegister s1))
             throw new IrCompilerException("Invalid operands");
         return buildBoolInstruction(s1, s2);
     }
