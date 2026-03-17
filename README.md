@@ -112,6 +112,38 @@ Compile main.CBPP.java using java 25 (or higher) and run it. The command line ar
 
 This is the first project I made that contains compiler optimizations. These optimizations are restricted to constant folding for now, which takes place after parsing.
 
+## Operator overloading
+
+Something cool regarding operators:
+
+If an operator is not defined on two data types (eg `+` on two structs), the compiler will try to find a function. The function signatures for overloaded operators are as follows:
+
+* _add: binary +
+* _sub: binary -
+* _mul: binary *
+* _div: binary /
+* _mod: binary %
+* _exp: binary **
+* _gt: binary >
+* _lt: binary <
+* _gteq: binary >=
+* _lteq: binary <=
+
+For example:
+```
+@ import libraries containing these functions here
+var a = _Vec2();
+var b = _Vec2();
+printv(a+b); 
+```
+Would be equivalent to writing:
+```
+@ import libraries containing these functions here
+var a = _Vec2();
+var b = _Vec2();
+printv(_add(a, b)); 
+```
+
 ## IMPORTANT
 
 This code is not optimized and will produce excessive copying.

@@ -21,3 +21,16 @@ mfn clamp(x: byte, min: byte, max: byte) -> byte {
     else
         return x;
 }
+struct short {
+    a: byte;
+    b: byte;
+}
+mfn _short(a: byte, b: byte) -> short {
+    var short = _short();
+    short.a = a;
+    short.b = b;
+    return short;
+}
+mfn _add(a: short, b: short) -> short: _short(a.a+b.a+#(a.b > 255-b.b), a.b+b.b);
+mfn _sub(a: short, b: short) -> short: _short(a.a-b.a-#(a.b < b.b), a.b-b.b);
+mfn _short(x: byte) -> short: _short(0, x);

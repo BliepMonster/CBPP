@@ -1,17 +1,19 @@
 import "examples/libs/err.cbpp";
 import "examples/libs/io.cbpp";
-struct Vector2 {
+import "examples/libs/num.cbpp";
+
+struct Vec2 {
     x: byte;
     y: byte;
 }
-struct short {
-    a: byte;
-    b: byte;
+mfn _Vec2(x: byte, y: byte) -> Vec2 {
+    var vec = _Vec2();
+    vec.x = x;
+    vec.y = y;
+    return vec;
 }
-mfn add(a: short, b: short) -> short {
-    var new = _short();
-    new.a = a.a + b.a;
-    new.b = a.b + b.b;
-    return new;
-}
-add(_short(), _short());
+mfn _add(a: Vec2, b: Vec2) -> Vec2: _Vec2(a.x+b.x, a.y+b.y);
+var vec = _Vec2(1, 2)+_Vec2(2, 3);
+printv(vec.x);
+print ", ";
+printv(vec.y);

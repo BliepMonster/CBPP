@@ -240,23 +240,93 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.PLUS_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new AddInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new AddInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_add", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.MINUS_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new SubInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new SubInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_sub", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.STAR_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new MulInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new MulInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_mul", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.MOD_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new ModInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new ModInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_mod", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.SLASH_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new DivInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new DivInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_div", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.OR_EQ) {
             checkValidAssignment(expr.left);
@@ -272,34 +342,167 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.EXP_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new ExpInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new ExpInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_exp", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.BITOR_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new BitwiseOrInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new BitwiseOrInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_bitor", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.BITXOR_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new BitwiseXorInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new BitwiseXorInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_bitxor", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         } else if (expr.operator.type == TokenType.BITAND_EQ) {
             checkValidAssignment(expr.left);
-            out.add(new BitwiseAndInstruction(res2.result(), res1.result(), res1.result()));
+            if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                out.add(new BitwiseAndInstruction(res2.result(), res1.result(), res1.result()));
+            else {
+                ArrayList<String> types = new ArrayList<>();
+                types.add(res1.result().type.toString());
+                types.add(res2.result().type.toString());
+                UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_bitand", types));
+                if (fn.result().type != res1.result().type) {
+                    throw new CompilerException("Invalid type");
+                }
+                out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                out.add(new CallInstruction(fn.getUniqueName()));
+                out.add(new CopyInstruction(fn.result(), res1.result()));
+            }
             return new ExpressionResult(out, res1.result());
         }
         TempAllocationResult ta = scope.allocTemp(getBinaryReturnType(res1.result().type, res2.result().type, expr.operator.type));
         out.add(ta.instr());
         result = scope.retrieveVar(ta.tempName());
         switch (expr.operator.type) {
-            case PLUS -> out.add(new AddInstruction(res1.result(), res2.result(), result));
+            case PLUS -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new AddInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_add", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    return new ExpressionResult(out, fn.result());
+                }
+            }
             case BITAND -> out.add(new BitwiseAndInstruction(res1.result(), res2.result(), result));
             case BITOR -> out.add(new BitwiseOrInstruction(res1.result(), res2.result(), result));
             case BITXOR -> out.add(new BitwiseXorInstruction(res1.result(), res2.result(), result));
-            case MINUS -> out.add(new SubInstruction(res1.result(), res2.result(), result));
-            case STAR -> out.add(new MulInstruction(res1.result(), res2.result(), result));
-            case SLASH -> out.add(new DivInstruction(res1.result(), res2.result(), result));
-            case MOD -> out.add(new ModInstruction(res1.result(), res2.result(), result));
-            case EXPONENT -> out.add(new ExpInstruction(res1.result(), res2.result(), result));
+            case MINUS -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new SubInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_sub", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
+            case STAR -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new MulInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_mul", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
+            case SLASH -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new DivInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_div", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
+            case MOD -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new ModInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_mod", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
+            case EXPONENT -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new ExpInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_exp", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }            }
             case EQEQ -> {
                 if (!res1.result().type.equals(res2.result().type))
                     out.add(new PutInstruction(result, (byte) 0));
@@ -313,15 +516,63 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
             case AND -> out.add(new AndInstruction(res1.result(), res2.result(), result));
             case OR -> out.add(new OrInstruction(res1.result(), res2.result(), result));
             case XOR -> out.add(new XorInstruction(res1.result(), res2.result(), result));
-            case GT -> out.add(new GtInstruction(res1.result(), res2.result(), result));
-            case GTEQ -> {
-                out.add(new GtInstruction(res2.result(), res1.result(), result));
-                out.add(new InvInstruction(result, result));
+            case GT -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new GtInstruction(res1.result(), res2.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_gt", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
             }
-            case LT -> out.add(new GtInstruction(res2.result(), res1.result(), result));
+            case GTEQ -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType) {
+                    out.add(new GtInstruction(res2.result(), res1.result(), result));
+                    out.add(new InvInstruction(result, result));
+                } else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_gteq", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
+            case LT -> {
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType)
+                    out.add(new GtInstruction(res2.result(), res1.result(), result));
+                else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_lt", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
+            }
             case LTEQ -> {
-                out.add(new GtInstruction(res1.result(), res2.result(), result));
-                out.add(new InvInstruction(result, result));
+                if (res1.result().type instanceof ByteType && res2.result().type instanceof ByteType) {
+                    out.add(new GtInstruction(res1.result(), res2.result(), result));
+                    out.add(new InvInstruction(result, result));
+                } else {
+                    ArrayList<String> types = new ArrayList<>();
+                    types.add(res1.result().type.toString());
+                    types.add(res2.result().type.toString());
+                    UniqueFunction fn = scope.retrieveFunctionByName(getFunctionUniqueName("_lteq", types));
+                    out.add(new CopyInstruction(res1.result(), fn.params().getFirst().position()));
+                    out.add(new CopyInstruction(res2.result(), fn.params().getLast().position()));
+                    out.add(new CallInstruction(fn.getUniqueName()));
+                    out.add(new CopyInstruction(fn.result(), result));
+                }
             }
             default -> throw new CompilerException("Invalid BINARY operator");
         }
@@ -329,10 +580,114 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     }
     public void checkTypeValidity(VariableType t1, VariableType t2, TokenType op) {
         switch (op) {
-            case PLUS, PLUS_EQ, MINUS, MINUS_EQ, STAR, STAR_EQ, SLASH, SLASH_EQ, EXPONENT, EXP_EQ, MOD, MOD_EQ, GT, GTEQ, LT, LTEQ, BITOR, BITAND, BITXOR, BITOR_EQ, BITAND_EQ, BITXOR_EQ -> {
-                if (!(t1 instanceof ByteType) || !(t2 instanceof ByteType))
-                    throw new CompilerException("Invalid types");
+            case GT -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_gt", types));
             }
+            case GTEQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_gteq", types));
+            }
+            case LT -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_lt", types));
+            }
+            case LTEQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_lteq", types));
+            }
+            case BITXOR, BITXOR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_bitxor", types));
+            }
+            case BITAND, BITAND_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_bitand", types));
+            }
+            case BITOR, BITOR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_bitor", types));
+            }
+            case MOD_EQ, MOD -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_mod", types));
+            }
+            case EXPONENT, EXP_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_exp", types));
+            }
+            case SLASH, SLASH_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_div", types));
+            }
+            case PLUS, PLUS_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_add", types));
+                // throws on unfound
+            }
+            case MINUS, MINUS_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_sub", types));
+                // throws on unfound
+            }
+            case STAR, STAR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    return;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                scope.retrieveFunctionByName(getFunctionUniqueName("_mul", types));
+                // throws on unfound
+            }
+            // non-overridable
             case OR, OR_EQ, AND, AND_EQ, XOR, XOR_EQ -> {
                 if (!(t1 instanceof BoolType) || !(t2 instanceof BoolType))
                     throw new CompilerException("Invalid types");
@@ -346,8 +701,111 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
     }
     public VariableType getBinaryReturnType(VariableType t1, VariableType t2, TokenType op) {
         return switch(op) {
-            case PLUS, PLUS_EQ, MINUS_EQ, STAR_EQ, SLASH_EQ, EXP_EQ, MOD_EQ, BITAND_EQ, BITOR_EQ, BITXOR_EQ, BITAND, BITOR, BITXOR, MINUS, STAR, SLASH, EXPONENT, MOD -> ByteType.INSTANCE;
-            case OR, OR_EQ, AND_EQ, XOR_EQ, AND, XOR, EQEQ, NEQ, GT, GTEQ, LT, LTEQ-> BoolType.INSTANCE;
+            case PLUS, PLUS_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_add", types)).result().type;
+            }
+            case MINUS, MINUS_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_sub", types)).result().type;
+            }
+            case STAR, STAR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_mul", types)).result().type;
+            }
+            case SLASH, SLASH_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_div", types)).result().type;
+            }
+            case EXPONENT, EXP_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_exp", types)).result().type;
+            }
+            case MOD, MOD_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_mod", types)).result().type;
+            }
+            case BITOR, BITOR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_bitor", types)).result().type;
+            }
+            case BITAND, BITAND_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_bitand", types)).result().type;
+            }
+            case BITXOR, BITXOR_EQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield ByteType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_bitxor", types)).result().type;
+            }
+            case GT -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield BoolType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_gt", types)).result().type;
+            }
+            case LT -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield BoolType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_lt", types)).result().type;
+            }
+            case LTEQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield BoolType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_lteq", types)).result().type;
+            }
+            case GTEQ -> {
+                if (t1 instanceof ByteType && t2 instanceof ByteType)
+                    yield BoolType.INSTANCE;
+                ArrayList<String> types = new ArrayList<>();
+                types.add(t1.toString());
+                types.add(t2.toString());
+                yield scope.retrieveFunctionByName(getFunctionUniqueName("_gteq", types)).result().type;
+            }
+            case OR, OR_EQ, AND_EQ, XOR_EQ, AND, XOR, EQEQ, NEQ-> BoolType.INSTANCE;
             case EQ -> t1;
             default -> throw new CompilerException("Invalid BINARY operator");
         };
