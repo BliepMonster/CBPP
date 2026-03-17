@@ -184,7 +184,7 @@ public class Compiler implements StatementVisitor<ArrayList<Instruction>>, Expre
                     throw new CompilerException("Duplicate fields");
             fields.put(new StructField(v.name(), getType(v.type())), fieldListSize(fields));
         }
-        StructType type = new StructType(fields);
+        StructType type = new StructType(fields, stmt.name);
         scope.register(new CompiledStruct(stmt.name, type));
         return genConstructor(stmt, type);
     }

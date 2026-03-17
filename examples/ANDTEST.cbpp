@@ -1,14 +1,17 @@
 import "examples/libs/err.cbpp";
 import "examples/libs/io.cbpp";
-var thirty_eight = 38;
-struct Test {
+struct Vector2 {
     x: byte;
     y: byte;
 }
-var test = _Test();
-if (?test)
-    print "no";
-test.x = 1;
-if (?test)
-    print "yes";
-printv(thirty_eight);
+struct short {
+    a: byte;
+    b: byte;
+}
+mfn add(a: short, b: short) -> short {
+    var new = _short();
+    new.a = a.a + b.a;
+    new.b = a.b + b.b;
+    return new;
+}
+add(_short(), _short());

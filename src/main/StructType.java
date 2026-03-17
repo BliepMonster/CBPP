@@ -14,9 +14,11 @@ class StructLookupException extends RuntimeException {
 
 public class StructType extends VariableType {
     public final HashMap<StructField, Integer> fields;
+    public final String name;
 
-    public StructType(HashMap<StructField, Integer> fields) {
+    public StructType(HashMap<StructField, Integer> fields, String name) {
         this.fields = fields;
+        this.name = name;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class StructType extends VariableType {
         return Objects.hashCode(fields);
     }
     public String toString() {
-        StringBuilder sb = new StringBuilder("STRUCT_[");
+        StringBuilder sb = new StringBuilder("STRUCT_" + name + "[");
         for (StructField f : fields.keySet()) {
             sb.append(f.type()).append(",");
         }
